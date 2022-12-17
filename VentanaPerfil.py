@@ -57,18 +57,18 @@ class ventanaPerfil(tk.Tk):
         ttk.Style().map('pad3.TButton', background=[('pressed', '#8D8C2F'), ('active', '#BBB939')])
 
 
-        botonRetiro = ttk.Button(self,style="pad.TButton",image= icono1)
+        botonRetiro = ttk.Button(self,style="pad.TButton",image= icono1, command= self.retirar)
         botonRetiro.image = icono1
-        botonDeposito = ttk.Button(self,style="pad.TButton",image=icono2)
+        botonDeposito = ttk.Button(self,style="pad.TButton",image=icono2, command= self.depositar)
         botonDeposito.imagen = icono2
-        botonAjustes = ttk.Button(self,style="pad2.TButton",image= icono3)
+        botonAjustes = ttk.Button(self,style="pad2.TButton",image= icono3, command= self.ajustarUsuario)
         botonAjustes.image  = icono3
-        botonTransferencia= ttk.Button(self,style="pad.TButton",image= icono4)
+        botonTransferencia= ttk.Button(self,style="pad.TButton",image= icono4, command= self.transferir)
         botonTransferencia.image = icono4
-        botonMovimientos = ttk.Button(self,style="pad.TButton",image= icono5)
+        botonMovimientos = ttk.Button(self,style="pad.TButton",image= icono5, command= self.verMovimientos)
         botonMovimientos.image = icono5
 
-        botonSalir = ttk.Button(self,style="pad3.TButton", text="SALIR")
+        botonSalir = ttk.Button(self,style="pad3.TButton", text="SALIR", command= self.salir)
 
         label = tk.Label(self,text= "Deposito",font= self.fontStyle3,bg=FONDO, foreground="#4D4D4D").place(x= 239, y= 240)
         label = tk.Label(self,text= "Retiro",font= self.fontStyle3,bg=FONDO, foreground="#4D4D4D").place(x= 239, y= 425)
@@ -86,23 +86,22 @@ class ventanaPerfil(tk.Tk):
 
     def depositar(self):
         print("Deposito")
-        pass
 
     def retirar(self):
-        print("Deposito")
-        pass
+        print("Retiro")
 
     def ajustarUsuario(self):
-        pass
+        print("Configurar")
 
     def transferir(self):
-        pass
+        print("Trasnfirio")
 
     def verMovimientos(self):
-        pass
+        print("lista Movimientos")
 
     def salir(self):
-        pass
+        print("Cerro Sesion")
+        self.destroy()
 
 
 ca = caje.Cajero()
