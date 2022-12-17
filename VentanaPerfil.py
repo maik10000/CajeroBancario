@@ -55,9 +55,11 @@ class ventanaPerfil(tk.Tk):
         botonSalir.place(x=956, y=620, width=172, height=45)
 
     def depositar(self):
+        print("Deposito")
         pass
 
     def retirar(self):
+        print("Deposito")
         pass
 
     def ajustarUsuario(self):
