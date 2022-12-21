@@ -38,7 +38,6 @@ class Usuario:
     def getCiudad(self):
         return self.__ciudad
 
-
     def setNumeroTelefono(self,numeroTlefono):
         self.__nuemroTelefono = numeroTlefono
 

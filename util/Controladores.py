@@ -1,4 +1,4 @@
-import util.validaciones as va
+import util.Validaciones as va
 
 def controllerRegsitro(nombre,cedula,celular,correo,clave):
 
@@ -12,8 +12,8 @@ def controllerRegsitro(nombre,cedula,celular,correo,clave):
         return [False, 'Error ingrese un numero de celular valido']
     if (not va.validarClave(clave)):
         return [False, 'Error ingrese una clave valida']
-
     return [True,'Regitro Exitoso']
+
 
 def cotrollerSesion(cuenta = "", clave = "" ,callback = None):
     if(cuenta != ''and clave !='' and cuenta != ' ' and clave !=' '):
@@ -28,5 +28,4 @@ def cotrollerSesion(cuenta = "", clave = "" ,callback = None):
 
     else:
         return {'estado':False,'res':'Llene todos los campos'}
-
 

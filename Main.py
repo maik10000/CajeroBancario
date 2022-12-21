@@ -4,7 +4,7 @@ import tkinter.font as tkFont
 import tkinter.ttk as ttk
 from VentnanaRegistro import VentanaRegistro
 from  VentanaPerfil import ventanaPerfil
-from util.controller import cotrollerSesion
+from util.Controladores import cotrollerSesion
 import util.Cajero as cajero
 FONDO = "#fff"
 class VentanaMain(tk.Tk):
@@ -116,5 +116,5 @@ class VentanaMain(tk.Tk):
 
 
 #MAIN
-venPrincipal  =VentanaMain()
+venPrincipal = VentanaMain()
 venPrincipal.mainloop()

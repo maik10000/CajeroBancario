@@ -3,6 +3,8 @@ import tkinter.font as tkFont
 import tkinter.ttk as ttk
 from PIL import ImageTk,Image
 import util.Cajero as caje
+from VentanaDeposito import VentanaDeposito
+
 FONDO = "#fff"
 class ventanaPerfil(tk.Tk):
 
@@ -57,10 +59,10 @@ class ventanaPerfil(tk.Tk):
         ttk.Style().map('pad3.TButton', background=[('pressed', '#8D8C2F'), ('active', '#BBB939')])
 
 
-        botonRetiro = ttk.Button(self,style="pad.TButton",image= icono1, command= self.retirar)
-        botonRetiro.image = icono1
-        botonDeposito = ttk.Button(self,style="pad.TButton",image=icono2, command= self.depositar)
-        botonDeposito.imagen = icono2
+        botonDeposito = ttk.Button(self,style="pad.TButton",image=icono1, command= self.depositar)
+        botonDeposito.imagen = icono1
+        botonRetiro = ttk.Button(self,style="pad.TButton",image= icono2, command= self.retirar)
+        botonRetiro.image = icono2
         botonAjustes = ttk.Button(self,style="pad2.TButton",image= icono3, command= self.ajustarUsuario)
         botonAjustes.image  = icono3
         botonTransferencia= ttk.Button(self,style="pad.TButton",image= icono4, command= self.transferir)
@@ -77,14 +79,15 @@ class ventanaPerfil(tk.Tk):
         label = tk.Label(self,text= "Mis Movimientos",font= self.fontStyle3,bg=FONDO, foreground="#4D4D4D").place(x= 815, y= 425)
 
 
-        botonRetiro.place(x=60, y=210, width=100, height=100)
-        botonDeposito.place(x=60, y=400, width=100, height=100)
+        botonDeposito.place(x=60, y=210, width=100, height=100)
+        botonRetiro.place(x=60, y=400, width=100, height=100)
         botonAjustes.place(x=60, y=575, width=100, height=100)
         botonTransferencia.place(x=635, y=210, width=100, height=100)
         botonMovimientos.place(x=635, y=400, width=100, height=100)
         botonSalir.place(x=956, y=620, width=172, height=45)
 
     def depositar(self):
+        venDeposito = VentanaDeposito()
         print("Deposito")
 
     def retirar(self):
@@ -104,8 +107,3 @@ class ventanaPerfil(tk.Tk):
         self.destroy()
 
 
-ca = caje.Cajero()
-ca.registrarUsuario("Michael Ortega","1727066332","1234","10000","micha@hotmail.com","0987654321","1324654897465","Quito","Pichincha")
-i = ca.buscarUsuario("1727066332")
-venP = ventanaPerfil(infoUser= i['userInfo'])
-venP.mainloop()

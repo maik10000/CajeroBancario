@@ -1,6 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-from util.controller import controllerRegsitro
+from util.Controladores import controllerRegsitro
 class VentanaRegistro(tk.Toplevel):
     en_uso = False
     def __init__(self, *args,callback2=None, callback = None,funete1  = None ,funete2 = None,FONDO= None, **kwargs):
@@ -134,7 +134,7 @@ prov16 = ( "Archidona","Carlos Luis Arosemena Tola","El Chaco","Quijos","Tena")
 prov17 =("Aguarico","Francisco de Orellana","Joya de los Sachas","Loreto")
 prov18 = ("Arajuno","Mera","Pastaza","Santa Clara (Ecuador)")
 prov19 = ("Cayambe","Mejía","Pedro Moncayo","Pedro Vicente Maldonado","Puerto Quito","Quito","Rumiñahui","San Miguel de los Bancos")
-prov20 = (  "La Libertad (Ecuador)","Salinas (Ecuador)","Santa Elena (Ecuador)")
+prov20 = ( "La Libertad (Ecuador)","Salinas (Ecuador)","Santa Elena (Ecuador)")
 prov21 = ("Santo Domingo de los Colorados")
 prov22 = ("Cascales","Cuyabeno","Gonzalo Pizarro","Lago Agrio","Putumayo","Shushufindi","Sucumbios")
 prov23 = ("Ambato","Baños (Ecuador)","Cevallos","Mocha","Patate","Pelileo")

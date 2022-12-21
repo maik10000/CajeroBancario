@@ -14,7 +14,6 @@ def validarCorreo(text):
         #print('el texto: '+ text +' ,no es un correo')
         return False
 
-
 def validarCelular(text):
     val = re.search(valCelular,text,re.I)
     if val != None:
@@ -23,7 +22,6 @@ def validarCelular(text):
     else:
         #print('el texto: '+ text +' ,no es un Numero valido')
         return False
-
 
 
 def validarClave(text):

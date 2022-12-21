@@ -4,7 +4,6 @@ class Cajero:
     def __init__(self):
         self.__usuarios = []
 
-
     def registrarUsuario(self, nombre,cedula,clave,saldo,correo,numeroTelefono,numeroCuenta,ciudad,provincia):
 
         nuevoUsuario =  Usuario(nombre,cedula,clave,saldo,correo,numeroTelefono,numeroCuenta,ciudad,provincia)
