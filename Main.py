@@ -93,6 +93,7 @@ class VentanaMain(tk.Tk):
             x2 = random.randint(0,100)
             cd = "100"+ str(x1) + str(x2)
         return cd
+
     def mostrarAvisoBien(self):
         self.aviso = tk.Label(self, text="Usuario Registrado con exito!", foreground="#007D00", bg="#4CFD4C", font=("Cascadia Code", 12))
         btnCerar = tk.Label(self.aviso, text="X", foreground="#007D00", bg="#4CFD4C", font=("Cascadia Code", 10))

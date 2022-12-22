@@ -12,6 +12,7 @@ class Cajero:
         nuevoUsuario =  Usuario(nombre,cedula,clave,saldo,correo,numeroTelefono,numeroCuenta,ciudad,provincia)
         self.__bdC.cerrarConexion()
 
+
     def varificarCiudad(self,ciudad,prov):
         if (len(self.__bdC.buscarDatos({'apunta': 'ciudad', 'valores': (ciudad,)})) == 0):
             respuesta = self.__bdC.buscarDatos({'apunta': 'provincia', 'valores': (prov,)})
