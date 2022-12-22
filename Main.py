@@ -83,7 +83,7 @@ class VentanaMain(tk.Tk):
 
     def registrarUsuario(self,nombre,cedula,clave,correo,telefono,ciudad,provicia):
         print("Usuario Registrado con exito!")
-        self.cj.registrarUsuario(nombre,cedula,clave,10,correo,telefono,self.generarCuenta,ciudad,provicia)
+        self.cj.registrarUsuario(nombre,cedula,clave,10,correo,telefono,self.generarCuenta(cedula,telefono),ciudad,provicia)
         self.mostrarAvisoBien()
 
     def generarCuenta(self, cedula, telefono):

@@ -115,7 +115,7 @@ provincias = ['Seleccione una Provincia', 'Azuay',  'Bolivar','Cañar', 'Carchi'
                 'Esmeraldas', 'Galápagos', 'Guayas','Imbabura', 'Loja', 'Los Ríos','Manabí', 'Morona Santiago','Napo',
                 'Orellana','Pastaza','Pichincha','Santa Elena','Santo Domingo de los Tsáchilas','Sucumbíos', 'Tungurahua','Zamora Chinchipe']
 
-prov1= ( "Camilo Ponce Enríquez","Chordeleg","Cuenca","El Pan","Girón","Guachapala", "Gualaceo","Nabón","Oña","Paute","Pucará", "San Fernando"," Santa Isabel","Sevilla de Oro","Sigsig")
+prov1= ( "Camilo Ponce Enríquez","Chordeleg","Cuenca","El Pan","Girón","Guachapala", "Gualaceo","Nabón","Oña","Paute","Pucará", "San Fernando","Santa Isabel","Sevilla de Oro","Sigsig")
 prov2 = ("Caluma","Chillanes","Chimbo","Echeandía","Guaranda","Las Naves","San Miguel")
 prov3 = ("Azogues","Biblián","Cañar","Déleg","El Tambo","La Troncal")
 prov4 =("Bolívar","Espejo","Mira","Montúfar","Tulcán")

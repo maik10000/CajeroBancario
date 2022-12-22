@@ -1,13 +1,23 @@
 from util.Usuario import Usuario
+from DataBase.bdCajero import DBCajero
 class Cajero:
 
     def __init__(self):
-        self.__usuarios = []
+        self.__usuarios = None
+        self.__bdC = DBCajero()
 
     def registrarUsuario(self, nombre,cedula,clave,saldo,correo,numeroTelefono,numeroCuenta,ciudad,provincia):
-
+        self.__bdC.abrirConexion()
+        self.__bdC.insertarDatos({'apunta': 'usuario', 'valores': (numeroCuenta,nombre,cedula,numeroTelefono,saldo,correo,clave,self.varificarCiudad(ciudad,provincia)[0][0])})
         nuevoUsuario =  Usuario(nombre,cedula,clave,saldo,correo,numeroTelefono,numeroCuenta,ciudad,provincia)
-        self.__usuarios.append(nuevoUsuario)
+        self.__bdC.cerrarConexion()
+
+    def varificarCiudad(self,ciudad,prov):
+        if (len(self.__bdC.buscarDatos({'apunta': 'ciudad', 'valores': (ciudad,)})) == 0):
+            respuesta = self.__bdC.buscarDatos({'apunta': 'provincia', 'valores': (prov,)})
+            self.__bdC.insertarDatos({'apunta': 'ciudad', 'valores': (ciudad, respuesta[0][0])})
+
+        return self.__bdC.buscarDatos({'apunta': 'ciudad', 'valores': (ciudad,)})
 
 
     def eliminarCuenta(self, index):
@@ -24,5 +34,4 @@ class Cajero:
 
     def getNumUsuarios(self):
         return len(self.__usuarios)
-
 
