@@ -14,6 +14,7 @@ class VentanaMain(tk.Tk):
         self.cj = cajero.Cajero()
         self.componentes()
 
+
     def componentes(self):
         #Ventanta
         self.title("BanCordillera")
@@ -78,7 +79,7 @@ class VentanaMain(tk.Tk):
            veP = ventanaPerfil(infoUser=res['userInfo'])
            veP.mainloop()
        else:
-           labelAviso = tk.Label(self, text=res['res'], foreground="red")
+           labelAviso = tk.Label(self, text=res['res'], foreground="red",bg= FONDO)
            labelAviso.place(x=570,y=500)
 
     def registrarUsuario(self,nombre,cedula,clave,correo,telefono,ciudad,provicia):

@@ -17,15 +17,8 @@ def controllerRegsitro(nombre,cedula,celular,correo,clave):
 
 def cotrollerSesion(cuenta = "", clave = "" ,callback = None):
     if(cuenta != ''and clave !='' and cuenta != ' ' and clave !=' '):
-         res  = callback(cuenta)
-         if(res['estado']):
-             if (res['userInfo'].getContra() == clave):
-                 return res
-             else:
-                return {'estado':False,'res':'Contraseña incorrecta'}
-         else:
-             return res
-
+        res  = callback(cuenta, clave)
+        return res
     else:
         return {'estado':False,'res':'Llene todos los campos'}
 

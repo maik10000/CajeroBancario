@@ -1,9 +1,8 @@
 class Usuario:
 
-    def __init__(self, nombre,cedula,contra,saldo,correo,numeroTelefono,numeroCuenta,ciudad,provincia):
+    def __init__(self, nombre,cedula,saldo,correo,numeroTelefono,numeroCuenta,ciudad,provincia):
         self.__nombre = nombre
         self.__cedula = cedula
-        self.__contra = contra
         self.__saldo = saldo
         self.__correo = correo
         self.__numeroCuenta = numeroCuenta
@@ -16,9 +15,6 @@ class Usuario:
 
     def getCedula(self):
         return self.__cedula
-
-    def getContra(self):
-        return self.__contra
 
     def getSaldo(self):
         return self.__saldo
@@ -46,9 +42,6 @@ class Usuario:
 
     def setCedula(self, cedula):
         self.__cedula = cedula
-
-    def setContra(self, contra):
-        self.__contra = contra
 
     def setSaldo(self,saldo):
         self.__saldo = saldo

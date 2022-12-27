@@ -2,7 +2,6 @@ import tkinter as tk
 import tkinter.font as tkFont
 import tkinter.ttk as ttk
 from PIL import ImageTk,Image
-import util.Cajero as caje
 from VentanaDeposito import VentanaDeposito
 
 FONDO = "#fff"
@@ -12,20 +11,26 @@ class ventanaPerfil(tk.Tk):
         super().__init__(*args, **kwargs)
         self.informacion = infoUser
         self.componentes()
+
+
+
     def componentes(self):
-        self.title("Bienvenido "+self.informacion.getNombre())
+
+        self.title("Bienvenido " + self.informacion.getNombre())
         self.geometry("1270x720")
         self.resizable(False, False)
         self.configure(bg= FONDO)
+
 
         #font style
         self.fontStyle = tkFont.Font(family="Cascadia Code", size=25, slant="italic",weight="bold")
         self.fontStyle2 = tkFont.Font(family="Cascadia Code", size=30, slant="italic",weight="bold")
         self.fontStyle3 = tkFont.Font(family="Cascadia Code", size=20, slant="italic",weight="bold")
+
         #nombre_Perfil
         labelNombre = tk.Label(self,text =self.informacion.getNombre(), font= self.fontStyle,bg=FONDO,foreground="#393939").place(x=60,y=50)
         label = tk.Label(self,text= self.informacion.getNumeroCuenta(),font= self.fontStyle3,bg=FONDO, foreground="#B6B6B6").place(x= 75, y= 100)
-        labelPrice =  tk.Label(self,text ="$"+self.informacion.getSaldo(), font= self.fontStyle2,bg=FONDO,foreground="#3BD540")
+        labelPrice =  tk.Label(self,text ="$"+str(self.informacion.getSaldo()), font= self.fontStyle2,bg=FONDO,foreground="#3BD540")
         labelPrice.place(x=761,y=56,width=367,height=50)
 
         #Botones de perfil
@@ -71,6 +76,7 @@ class ventanaPerfil(tk.Tk):
         botonMovimientos.image = icono5
 
         botonSalir = ttk.Button(self,style="pad3.TButton", text="SALIR", command= self.salir)
+
 
         label = tk.Label(self,text= "Deposito",font= self.fontStyle3,bg=FONDO, foreground="#4D4D4D").place(x= 239, y= 240)
         label = tk.Label(self,text= "Retiro",font= self.fontStyle3,bg=FONDO, foreground="#4D4D4D").place(x= 239, y= 425)

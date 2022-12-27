@@ -3,13 +3,11 @@ from DataBase.bdCajero import DBCajero
 class Cajero:
 
     def __init__(self):
-        self.__usuarios = None
         self.__bdC = DBCajero()
 
     def registrarUsuario(self, nombre,cedula,clave,saldo,correo,numeroTelefono,numeroCuenta,ciudad,provincia):
         self.__bdC.abrirConexion()
         self.__bdC.insertarDatos({'apunta': 'usuario', 'valores': (numeroCuenta,nombre,cedula,numeroTelefono,saldo,correo,clave,self.varificarCiudad(ciudad,provincia)[0][0])})
-        nuevoUsuario =  Usuario(nombre,cedula,clave,saldo,correo,numeroTelefono,numeroCuenta,ciudad,provincia)
         self.__bdC.cerrarConexion()
 
 
@@ -21,18 +19,17 @@ class Cajero:
         return self.__bdC.buscarDatos({'apunta': 'ciudad', 'valores': (ciudad,)})
 
 
-    def eliminarCuenta(self, index):
-        self.__usuarios.pop(index)
+    def buscarUsuario(self, cuenta, passwd):
+        self.__bdC.abrirConexion()
+        credenciales = {'apunta': 'usuario', 'valores': (cuenta, passwd)}
+        res = self.__bdC.buscarDatos(credenciales)
+        #print(res[0])
+        if (len(res)!=0):
+            dataUser = Usuario(res[0][1], res[0][2], res[0][4], res[0][5], res[0][3], res[0][0], res[0][6], res[0][7])
+            data = {'estado': True, 'userInfo': dataUser, 'res': "Si hay"}
+        else:
+            data = {'estado': False, 'res': "Usuario o contraseña incorrecta"}
+        self.__bdC.cerrarConexion()
+        return  data
 
-    def buscarUsuario(self, cuenta):
-        for i in self.__usuarios:
-            if (i.getNumeroCuenta() == cuenta or i.getCedula() == cuenta):
-                return {'estado': True, 'userInfo': i, 'res': "Si hay"}
-        return {'estado': False, 'res': "Usuario o contraseñas incorrectas"}
-
-    def getUsuarios(self):
-        return self.__usuarios
-
-    def getNumUsuarios(self):
-        return len(self.__usuarios)
 
