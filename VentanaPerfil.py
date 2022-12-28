@@ -3,7 +3,7 @@ import tkinter.font as tkFont
 import tkinter.ttk as ttk
 from PIL import ImageTk,Image
 from VentanaDeposito import VentanaDeposito
-
+import VentanaInicio as venI
 FONDO = "#fff"
 class ventanaPerfil(tk.Tk):
 
@@ -59,7 +59,7 @@ class ventanaPerfil(tk.Tk):
         ttk.Style().configure('pad.TButton', background="#017175", bordercolor='#eee')
         ttk.Style().configure('pad2.TButton', background="#A68633", bordercolor='#eee')
         ttk.Style().configure('pad3.TButton', foreground="#fff", background="#CCCA3E", bordercolor='#eee', font=("Cascadia Code", 16))
-        ttk.Style().map('pad.TButton', background=[('pressed', '#4B6730'), ('active', '#5B7C3B')])
+        ttk.Style().map('pad.TButton', background=[('pressed', '#4B6730'), ('active', '#5B7C3B')]   )
         ttk.Style().map('pad2.TButton', background=[('pressed', '#5E4D21'), ('active', '#8B7230')])
         ttk.Style().map('pad3.TButton', background=[('pressed', '#8D8C2F'), ('active', '#BBB939')])
 
@@ -111,5 +111,7 @@ class ventanaPerfil(tk.Tk):
     def salir(self):
         print("Cerro Sesion")
         self.destroy()
+        ventanaInicio = venI.VentanaInicio()
+        ventanaInicio.mainloop()
 
 
