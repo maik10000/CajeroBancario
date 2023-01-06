@@ -3,7 +3,7 @@ import tkinter as tk
 import tkinter.font as tkFont
 import tkinter.ttk as ttk
 from VentnanaRegistro import VentanaRegistro
-from  VentanaPerfil import ventana_perfil
+from VentanaPerfil import VentanaPerfil
 from util.Controladores import cotroller_sesion
 from estilos.colores import color_sistema
 import util.Cajero as cajero
@@ -78,7 +78,7 @@ class VentanaInicio(tk.Tk):
        res =  cotroller_sesion(cuenta = self.input_usuario.get(), clave= self.input_pass.get(), callback = self.cj.cargar_usuario)
        if(res['estado']):
            self.destroy()
-           ve_p = ventana_perfil(infoUser=res['userInfo'])
+           ve_p = VentanaPerfil(info_user=res['userInfo'])
            ve_p.mainloop()
        else:
            label_aviso = tk.Label(self, text=res['res'], foreground=color.ROJO_1A,bg= color.BLANCO,font= self.font_style3)
