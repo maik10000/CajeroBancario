@@ -1,87 +1,91 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-from util.Controladores import controllerRegsitro
+from util.Controladores import controller_regsitro
+from estilos.colores import color_sistema
+color = color_sistema()
 class VentanaRegistro(tk.Toplevel):
     en_uso = False
-    def __init__(self, *args,callback2=None, callback = None,funete1  = None ,funete2 = None,FONDO= None, **kwargs):
+
+    def __init__(self, *args,callback2=None, callback = None,funete1  = None ,funete2 = None, **kwargs):
         super().__init__(*args, **kwargs)
         self.__callback = callback
         self.__callback2= callback2
         self.fuente1 = funete1
         self.fuente2 = funete2
-        self.FONDO = FONDO
         self.componentes()
         self.__callback2('disable')
         self.__class__.en_uso = True
-        self.flagProv = False
+        self.flag_prov = False
+
+
     def componentes(self):
         self.title("Registro")
         self.geometry("1270x720")
         self.resizable(False,False)
-        self.configure(bg=self.FONDO)
+        self.configure(bg= color.BLANCO)
         #label titulo
-        labelT = tk.Label(self,text="Registrate",font= self.fuente1,bg=self.FONDO)
+        labelT = tk.Label(self,text="Registrate",font= self.fuente1,bg= color.BLANCO)
         labelT.place(x =460,y=67)
         #Labels decorativos
-        label = tk.Label(self, bg="#0E4C57").place(x=55, y=160, width=75, height=500)
-        label = tk.Label(self,bg="#5E803D").place(x=1121,y=50,width=70,height=500)
+        label = tk.Label(self, bg=color.AZUL_57).place(x=55, y=160, width=75, height=500)
+        label = tk.Label(self,bg=color.VERDE_3D).place(x=1121,y=50,width=70,height=500)
         # estilos inputs
         ttk.Style().theme_use('clam')
-        ttk.Style().configure('pad.TEntry', selectbackground = '#93DFB9', padding='10 1 1 1', insertcolor="#5E803D", bordercolor='#ddd')
-        ttk.Style().configure('pad.TButton', foreground="#fff", background="#5E803D", bordercolor='#ddd', font=("Cascadia Code", 16))
-        ttk.Style().configure('pad.TCombobox',padding='10 1 1 1',bordercolor='#ddd',selectbackground='#fff',selectforeground='#000')
-        ttk.Style().map('pad.TEntry', lightcolor=[('focus', '#5E803D')])
-        ttk.Style().map('pad.TButton', background=[('pressed', '#4B6730'), ('active', '#5B7C3B')])
-        ttk.Style().map('pad.TCombobox',fieldbackground=[('readonly', self.FONDO)])
+        ttk.Style().configure('pad.TEntry', selectbackground = color.CELESTE_B9, padding='10 1 1 1', insertcolor=color.VERDE_3D, bordercolor=color.GRIS_DD)
+        ttk.Style().configure('pad.TButton', foreground=color.BLANCO, background=color.VERDE_3D, bordercolor=color.GRIS_DD, font=("Cascadia Code", 16))
+        ttk.Style().configure('pad.TCombobox',padding='10 1 1 1',bordercolor= color.GRIS_DD,selectbackground=color.BLANCO,selectforeground=color.NEGRO)
+        ttk.Style().map('pad.TEntry', lightcolor=[('focus',color.VERDE_3D)])
+        ttk.Style().map('pad.TButton', background=[('pressed', color.VERDE_30), ('active', color.VERDE_3B)])
+        ttk.Style().map('pad.TCombobox',fieldbackground=[('readonly', color.BLANCO)])
         #contain formulario
-        frameRegistro = tk.Frame(self,width=520,height=500,bg=self.FONDO)
-        frameRegistro.place(x=150,y=160)
+        frame_registro = tk.Frame(self,width=520,height=500,bg= color.BLANCO)
+        frame_registro.place(x=150,y=160)
         #inputs formulario
         #Nombre y apellido
-        label = tk.Label(frameRegistro,font= self.fuente2,text="Nombres y Apellidos:",foreground="#444",bg=self.FONDO).place(x= 0, y = 0)
-        self.inputNombre =  ttk.Entry(frameRegistro,style='pad.TEntry',font=("Cascadia Code",16))
-        self.inputNombre.place(x= 0, y = 40,width=470,height=36)
+        label = tk.Label(frame_registro,font= self.fuente2,text="Nombres y Apellidos:",foreground=color.NEGRO_44,bg= color.BLANCO).place(x= 0, y = 0)
+        self.input_nombre =  ttk.Entry(frame_registro, style='pad.TEntry', font=("Cascadia Code", 16))
+        self.input_nombre.place(x= 0, y = 40, width=470, height=36)
         #cedula
-        label = tk.Label(frameRegistro, font=self.fuente2, text="Numero de CI:", foreground="#444", bg=self.FONDO).place(x= 0, y = 100)
-        self.inputCedula = ttk.Entry(frameRegistro, style='pad.TEntry', font=("Cascadia Code", 16))
-        self.inputCedula.place(x= 0, y = 140,width=470,height=36)
+        label = tk.Label(frame_registro, font=self.fuente2, text="Numero de CI:", foreground=color.NEGRO_44, bg= color.BLANCO).place(x= 0, y = 100)
+        self.input_cedula = ttk.Entry(frame_registro, style='pad.TEntry', font=("Cascadia Code", 16))
+        self.input_cedula.place(x= 0, y = 140,width=470,height=36)
         #Correo
-        label = tk.Label(frameRegistro,font= self.fuente2,text="Correo:",foreground="#444",bg=self.FONDO).place(x= 0, y = 200)
-        self.inputCorreo =  ttk.Entry(frameRegistro,style='pad.TEntry',font=("Cascadia Code",16))
-        self.inputCorreo.place(x= 0, y = 240,width=470,height=36)
+        label = tk.Label(frame_registro,font= self.fuente2,text="Correo:",foreground=color.NEGRO_44,bg= color.BLANCO).place(x= 0, y = 200)
+        self.input_correo =  ttk.Entry(frame_registro,style='pad.TEntry',font=("Cascadia Code",16))
+        self.input_correo.place(x= 0, y = 240,width=470,height=36)
         #Telefono
-        label = tk.Label(frameRegistro,font= self.fuente2,text="Telefono:",foreground="#444",bg=self.FONDO).place(x=0, y=300)
-        self.inputTelefono =  ttk.Entry(frameRegistro,style='pad.TEntry',font=("Cascadia Code",16))
-        self.inputTelefono.place(x= 0, y = 340 ,width=470,height=36)
+        label = tk.Label(frame_registro,font= self.fuente2,text="Telefono:",foreground=color.NEGRO_44,bg=color.BLANCO).place(x=0, y=300)
+        self.input_celular =  ttk.Entry(frame_registro,style='pad.TEntry',font=("Cascadia Code",16))
+        self.input_celular.place(x= 0, y = 340 ,width=470,height=36)
         #Provincias
-        label = tk.Label(frameRegistro, font=self.fuente2, text="Provicias:", foreground="#444", bg=self.FONDO).place(x=0, y=400)
-        self.comboBoxProv = ttk.Combobox(frameRegistro,font=("Cascadia Code", 15),style='pad.TCombobox' ,state="readonly")
-        self.comboBoxProv.place(x= 0, y = 440 ,width=470,height=36)
-        self.comboBoxProv['values'] = provincias
-        self.comboBoxProv.current(0)
-        self.comboBoxProv.bind("<<ComboboxSelected>>",self.cambiarCiudades)
+        label = tk.Label(frame_registro, font=self.fuente2, text="Provicias:", foreground=color.NEGRO_44, bg=color.BLANCO).place(x=0, y=400)
+        self.combo_box_prov = ttk.Combobox(frame_registro, font=("Cascadia Code", 15), style='pad.TCombobox', state="readonly")
+        self.combo_box_prov.place(x= 0, y = 440, width=470, height=36)
+        self.combo_box_prov['values'] = provincias
+        self.combo_box_prov.current(0)
+        self.combo_box_prov.bind("<<ComboboxSelected>>", self.cambiar_ciudades)
         #Formulario 2
-        frameRegistro2 = tk.Frame(self,width=430,height=472,bg=self.FONDO)
-        frameRegistro2.place(x=680,y=160)
+        frame_registro2 = tk.Frame(self,width=430,height=472,bg=color.BLANCO)
+        frame_registro2.place(x=680,y=160)
         #Ciudad
-        label = tk.Label(frameRegistro2, font=self.fuente2, text="Ciudad:", foreground="#444", bg=self.FONDO).place(x=0, y=0)
-        self.comboBoxCuidad = ttk.Combobox(frameRegistro2, font=("Cascadia Code", 15), style='pad.TCombobox', state="readonly")
-        self.comboBoxCuidad.place(x=0, y=60, width=400, height=36)
-        self.comboBoxCuidad['values'] = ['Seleccione una cuidad']
-        self.comboBoxCuidad.current(0)
+        label = tk.Label(frame_registro2, font=self.fuente2, text="Ciudad:", foreground=color.NEGRO_44, bg=color.BLANCO).place(x=0, y=0)
+        self.combo_box_cuidad = ttk.Combobox(frame_registro2, font=("Cascadia Code", 15), style='pad.TCombobox', state="readonly")
+        self.combo_box_cuidad.place(x=0, y=60, width=400, height=36)
+        self.combo_box_cuidad['values'] = ['Seleccione una cuidad']
+        self.combo_box_cuidad.current(0)
         #Claves
-        label = tk.Label(frameRegistro2, font=self.fuente2, text="Clave de 4 digitos:", foreground="#444", bg=self.FONDO).place(x=0, y=100)
-        self.inputCave  = ttk.Entry(frameRegistro2,style='pad.TEntry',font=("Cascadia Code",16), show = "*")
-        self.inputCave.place(x= 0, y = 160,width=300,height=36)
-        label = tk.Label(frameRegistro2, font=self.fuente2, text="Confirme su clave:", foreground="#444", bg=self.FONDO).place(x=0, y=200)
-        self.inputCave2  = ttk.Entry(frameRegistro2,style='pad.TEntry',font=("Cascadia Code",16), show = "*")
-        self.inputCave2.place(x= 0, y = 260,width=300,height=36)
+        label = tk.Label(frame_registro2, font=self.fuente2, text="Clave de 4 digitos:", foreground=color.NEGRO_44, bg=color.BLANCO).place(x=0, y=100)
+        self.input_clave  = ttk.Entry(frame_registro2,style='pad.TEntry',font=("Cascadia Code",16), show = "*")
+        self.input_clave.place(x= 0, y = 160,width=300,height=36)
+        label = tk.Label(frame_registro2, font=self.fuente2, text="Confirme su clave:", foreground=color.NEGRO_44, bg=color.BLANCO).place(x=0, y=200)
+        self.input_clave2  = ttk.Entry(frame_registro2,style='pad.TEntry',font=("Cascadia Code",16), show = "*")
+        self.input_clave2.place(x= 0, y = 260,width=300,height=36)
 
-        self.labelAviso = tk.Label(self,text="",foreground="#B80000",bg="#fff",font=("Cascadia Code",12))
-        self.labelAviso.place(x=700,y=500)
+        self.label_aviso = tk.Label(self, text="", foreground=color.ROJO_00, bg=color.BLANCO, font=("Cascadia Code", 12))
+        self.label_aviso.place(x=700, y=500)
 
-        self.botonRegistrar = ttk.Button(self,text="Registrarse",style="pad.TButton", command= self.registrar)
-        self.botonRegistrar.place(x=750,y=550,width=172,height=45)
+        self.boton_registrar = ttk.Button(self, text="Registrarse", style="pad.TButton", command= self.registrar)
+        self.boton_registrar.place(x=750, y=550, width=172, height=45)
 
     def destroy(self):
         self.__class__.en_uso = False
@@ -89,27 +93,27 @@ class VentanaRegistro(tk.Toplevel):
         return super().destroy()
 
     def registrar(self):
-        respuesta = controllerRegsitro(self.inputNombre.get(),self.inputCedula.get(),self.inputTelefono.get(),self.inputCorreo.get(),self.inputCave.get())
+        respuesta = controller_regsitro(self.input_nombre.get(), self.input_cedula.get(), self.input_celular.get(), self.input_correo.get(), self.input_clave.get(),self.input_clave2)
         if respuesta[0]:
-            if  self.flagProv:
-                self.__callback(self.inputNombre.get(),self.inputCedula.get(),self.inputCave.get(),self.inputCorreo.get(),self.inputTelefono.get(),self.comboBoxCuidad.get(),self.comboBoxProv.get())
+            if  self.flag_prov:
+                self.__callback(self.input_nombre.get(), self.input_cedula.get(), self.input_clave.get(), self.input_correo.get(), self.input_celular.get(), self.combo_box_cuidad.get(), self.combo_box_prov.get())
                 self.destroy()
             else:
-                self.labelAviso['text']='Seleccione una provincia y ciudad'
+                self.label_aviso['text']= 'Seleccione una provincia y ciudad'
         else:
-            self.labelAviso['text']=respuesta[1]
+            self.label_aviso['text']=respuesta[1]
 
 
 
-    def cambiarCiudades(self,event):
-        if self.comboBoxProv.get() != 'Seleccione una Provincia':
-            self.comboBoxCuidad['values'] = ciudades[self.comboBoxProv.get()]
-            self.comboBoxCuidad.current(0)
-            self.flagProv = True
+    def cambiar_ciudades(self, event):
+        if self.combo_box_prov.get() != 'Seleccione una Provincia':
+            self.combo_box_cuidad['values'] = ciudades[self.combo_box_prov.get()]
+            self.combo_box_cuidad.current(0)
+            self.flag_prov = True
         else:
-            self.comboBoxCuidad['values'] = ['Seleccione una cuidad']
-            self.comboBoxCuidad.current(0)
-            self.flagProv = False
+            self.combo_box_cuidad['values'] = ['Seleccione una cuidad']
+            self.combo_box_cuidad.current(0)
+            self.flag_prov = False
 
 provincias = ['Seleccione una Provincia', 'Azuay',  'Bolivar','Cañar', 'Carchi', 'Chimborazo','Cotopaxi', 'El Oro',
                 'Esmeraldas', 'Galápagos', 'Guayas','Imbabura', 'Loja', 'Los Ríos','Manabí', 'Morona Santiago','Napo',

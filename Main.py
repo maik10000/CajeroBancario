@@ -1,3 +1,3 @@
-import VentanaInicio as venI
+import VentanaInicio as ven_inicio
 #MAIN
-venI.VentanaInicio().mainloop()
+ven_inicio.VentanaInicio().mainloop()

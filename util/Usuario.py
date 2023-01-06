@@ -1,60 +1,60 @@
 class Usuario:
 
-    def __init__(self, nombre,cedula,saldo,correo,numeroTelefono,numeroCuenta,ciudad,provincia):
+    def __init__(self, nombre,cedula,saldo,correo,numero_celular,numero_cuenta,ciudad,provincia):
         self.__nombre = nombre
         self.__cedula = cedula
         self.__saldo = saldo
         self.__correo = correo
-        self.__numeroCuenta = numeroCuenta
-        self.__nuemroTelefono = numeroTelefono
+        self.__numero_cuenta = numero_cuenta
+        self.__nuemro_celular = numero_celular
         self.__ciudad = ciudad
         self.__provincia = provincia
 
-    def getNombre(self):
+    def get_nombre(self):
         return self.__nombre
 
-    def getCedula(self):
+    def get_cedula(self):
         return self.__cedula
 
-    def getSaldo(self):
+    def get_saldo(self):
         return self.__saldo
 
-    def getCorreo(self):
+    def get_correo(self):
         return self.__correo
 
-    def getNumeroCuenta(self):
-        return self.__numeroCuenta
+    def get_numero_cuenta(self):
+        return self.__numero_cuenta
 
-    def getNumeroTelefono(self):
-        return self.__nuemroTelefono
+    def get_numero_celular(self):
+        return self.__nuemro_celular
 
-    def getProvicia(self):
+    def get_provicia(self):
         return self.__provincia
 
-    def getCiudad(self):
+    def get_ciudad(self):
         return self.__ciudad
 
-    def setNumeroTelefono(self,numeroTlefono):
-        self.__nuemroTelefono = numeroTlefono
+    def set_numero_celular(self, numero_celular):
+        self.__nuemro_celular = numero_celular
 
-    def setNombre(self, nombre):
+    def set_nombre(self, nombre):
         self.__nombre  =nombre
 
-    def setCedula(self, cedula):
+    def set_cedula(self, cedula):
         self.__cedula = cedula
 
-    def setSaldo(self,saldo):
+    def set_saldo(self,saldo):
         self.__saldo = saldo
 
-    def setCorreo(self, correo):
+    def set_correo(self, correo):
         self.__correo = correo
 
-    def setNuemroCuenta(self, numeroCuenta):
-        self.__numeroCuenta = numeroCuenta
+    def set_nuemro_cuenta(self, numero_cuenta):
+        self.__numero_cuenta = numero_cuenta
 
-    def setProvincia(self,prov):
+    def set_provincia(self,prov):
         self.__provincia = prov
 
-    def setCiudad(self,ciudad):
+    def set_ciudad(self,ciudad):
         self.__ciudad = ciudad
 
