@@ -101,7 +101,7 @@ class VentanaPerfil(tk.Tk):
 
     def depositar(self):
         if not VentanaDeposito.en_uso:
-            VentanaDeposito(self.informacion.get_numero_cuenta())
+            VentanaDeposito(num_cuenta=self.informacion.get_numero_cuenta())
 
     def retirar(self):
         print("Retiro")

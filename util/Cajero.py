@@ -44,4 +44,3 @@ class Cajero:
             data = {'estado': False, 'res': "Esa cuenta no existe"}
         self.__bd_del_cajero.cerrar_conexion()
         return  data
-
