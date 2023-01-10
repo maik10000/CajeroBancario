@@ -7,16 +7,18 @@ from util.Cajero import Cajero
 color = color_sistema()
 
 
-class VentanaDeposito(tk.Toplevel):
+class VentanaDepositoTransferencia(tk.Toplevel):
     en_uso = False
-    def __init__(self, *args,num_cuenta = "", **kwargs):
+
+    def __init__(self, *args,num_cuenta = "",mood="", **kwargs):
         super().__init__(*args, **kwargs)
         self.__class__.en_uso = True
         self.nume_cuenta = num_cuenta
+        self.mood = mood
         self.componentes()
 
     def componentes(self):
-        self.title("Deposito")
+        self.title(self.mood)
         self.geometry('800x600')
         self.resizable(False,False)
         self.configure(bg= color.BLANCO)
@@ -59,7 +61,8 @@ class VentanaDeposito(tk.Toplevel):
                             monto_efectivo=cant,
                             num_cuenta_usuario=self.nume_cuenta.replace(self.nume_cuenta[6:len(self.nume_cuenta)],
                                                                         cadena_oculta),
-                            correo_beneficiario=res['userInfo'][1]
+                            correo_beneficiario=res['userInfo'][1],
+                            callback=cj.modo(modo=self.mood)
                             )
             else:
                 print("Error usuario no encontrado")
@@ -68,14 +71,18 @@ class VentanaDeposito(tk.Toplevel):
 
 
 
-
 class Comprobante(tk.Toplevel):
     en_uso = False
-    def __init__(self, *args, nombre_beneficiario="", num_cuenta_usuario="", num_cuenta_beneficiario="", correo_beneficiario="", monto_efectivo="", **kwargs):
+
+    def __init__(self, *args, nombre_beneficiario="", num_cuenta_usuario="", num_cuenta_beneficiario="",
+                 correo_beneficiario="", monto_efectivo="", callback = None,titulo ="", **kwargs):
+
         super().__init__(*args,**kwargs)
         self.__class__.en_uso = True
         self.nombre_beneficiario = nombre_beneficiario
         self.num_origen= num_cuenta_usuario
+        self.callback = callback
+        self.titulo = titulo
         self.num_destino = num_cuenta_beneficiario
         self.correo_beneficiario = correo_beneficiario
         self.fecha = time.strftime("%Y-%m-%d")
@@ -84,7 +91,7 @@ class Comprobante(tk.Toplevel):
         self.componentes()
 
     def componentes(self):
-        self.title("Deposito")
+        self.title(self.titulo)
         self.geometry('500x800')
         self.resizable(False, False)
         self.configure(bg= color.BLANCO)
@@ -94,22 +101,36 @@ class Comprobante(tk.Toplevel):
         self.font_style2 = tk_font.Font(family="Cascadia Code", size=30, slant="italic", weight="bold")
         self.font_style3 = tk_font.Font(family="Cascadia Code", size=15, slant="italic", weight="bold")
 
-        label = tk.Label(self, bg=color.AZUL_57).place(x=75, y=10, width=360, height=3)
-        label = tk.Label(self, bg=color.BLANCO, text="Bancordillera", font= self.font_style2, foreground=color.VERDE_3B).place(x=111, y=24)
-        label = tk.Label(self,bg=color.AMARILLO_3E).place(x= 100, y = 100, width=300,height=2)
-        label = tk.Label(self, bg= color.BLANCO,text="Depositar", font= self.font_style, foreground= color.VERDE_00).place(x=190, y=102)
-        label = tk.Label(self, bg= color.BLANCO_CC).place(x=65, y=150,width=370, height=2)
+        label = tk.Label(self, bg=color.AZUL_57)
+        label.place(x=75, y=10, width=360, height=3)
+        label = tk.Label(self, bg=color.BLANCO, text="Bancordillera", font= self.font_style2, foreground=color.VERDE_3B)
+        label.place(x=111, y=24)
+        label = tk.Label(self,bg=color.AMARILLO_3E)
+        label.place(x= 100, y = 100, width=300,height=2)
+        label = tk.Label(self, bg= color.BLANCO,text=self.titulo, font= self.font_style, foreground= color.VERDE_00)
+        label.place(x=190, y=102)
+        label = tk.Label(self, bg= color.BLANCO_CC)
+        label.place(x=65, y=150,width=370, height=2)
 
-        label = tk.Label(self,bg= color.BLANCO, foreground= color.NEGRO_11, text="De la cuenta:",font= self.font_style3).place(x=73,y=161)
-        label = tk.Label(self,bg= color.BLANCO, foreground= color.NEGRO_11, text="A la cuenta:",font= self.font_style3).place(x=73,y=226)
-        label = tk.Label(self,bg= color.BLANCO, foreground= color.NEGRO_11, text="Beneficiario:",font= self.font_style3).place(x=73,y=292)
-        label = tk.Label(self,bg= color.BLANCO, foreground= color.NEGRO_11, text="Email:",font= self.font_style3).place(x=73,y=357)
+        label = tk.Label(self,bg= color.BLANCO, foreground= color.NEGRO_11, text="De la cuenta:",font= self.font_style3)
+        label.place(x=73,y=161)
+        label = tk.Label(self,bg= color.BLANCO, foreground= color.NEGRO_11, text="A la cuenta:",font= self.font_style3)
+        label.place(x=73,y=226)
+        label = tk.Label(self,bg= color.BLANCO, foreground= color.NEGRO_11, text="Beneficiario:",font= self.font_style3)
+        label.place(x=73,y=292)
+        label = tk.Label(self,bg= color.BLANCO, foreground= color.NEGRO_11, text="Email:",font= self.font_style3)
+        label.place(x=73,y=357)
 
-        label = tk.Label(self,bg= color.BLANCO, foreground=color.GRIS_4D, text=self.num_origen,font= self.font_style3).place(x=250,y=161)
-        label = tk.Label(self,bg= color.BLANCO, foreground=color.GRIS_4D, text=self.num_destino,font= self.font_style3).place(x=250,y=226)
-        label = tk.Label(self,bg= color.BLANCO, foreground=color.GRIS_4D, text=self.nombre_beneficiario,font= self.font_style3).place(x=250,y=292)
-        label = tk.Label(self,bg= color.BLANCO, foreground=color.GRIS_4D, text=self.correo_beneficiario,font= self.font_style3).place(x=250,y=357)
-        label = tk.Label(self, bg= color.BLANCO_CC).place(x=65, y=408,width=370, height=2)
+        label = tk.Label(self,bg= color.BLANCO, foreground=color.GRIS_4D, text=self.num_origen,font= self.font_style3)
+        label.place(x=250,y=161)
+        label = tk.Label(self,bg= color.BLANCO, foreground=color.GRIS_4D, text=self.num_destino,font= self.font_style3)
+        label.place(x=250,y=226)
+        label = tk.Label(self,bg= color.BLANCO, foreground=color.GRIS_4D, text=self.nombre_beneficiario,font=self.font_style3)
+        label.place(x=250,y=292)
+        label = tk.Label(self,bg= color.BLANCO, foreground=color.GRIS_4D, text=self.correo_beneficiario,font=self.font_style3)
+        label.place(x=250,y=357)
+        label = tk.Label(self, bg= color.BLANCO_CC)
+        label.place(x=65, y=408,width=370, height=2)
 
         label = tk.Label(self,bg= color.BLANCO, foreground= color.NEGRO_11, text="Fecha:",font= self.font_style3).place(x=73,y=442)
         label = tk.Label(self,bg= color.BLANCO, foreground= color.NEGRO_11, text="N. Comprobante:",font= self.font_style3).place(x=73,y=495)
@@ -125,3 +146,4 @@ class Comprobante(tk.Toplevel):
 
         boton_confirmar =  ttk.Button(self,text="Confirmar").place(x=163,y=640,width=174,height=40)
         boton_cancelar =  ttk.Button(self,text="Cancelar").place(x=163,y=700,width=174,height=40)
+

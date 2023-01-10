@@ -3,6 +3,8 @@ import tkinter.ttk as ttk
 from util.Controladores import controller_regsitro
 from estilos.colores import color_sistema
 color = color_sistema()
+
+
 class VentanaRegistro(tk.Toplevel):
     en_uso = False
 
@@ -16,7 +18,6 @@ class VentanaRegistro(tk.Toplevel):
         self.__callback2('disable')
         self.__class__.en_uso = True
         self.flag_prov = False
-
 
     def componentes(self):
         self.title("Registro")
@@ -115,34 +116,51 @@ class VentanaRegistro(tk.Toplevel):
             self.combo_box_cuidad.current(0)
             self.flag_prov = False
 
-provincias = ['Seleccione una Provincia', 'Azuay',  'Bolivar','Cañar', 'Carchi', 'Chimborazo','Cotopaxi', 'El Oro',
-                'Esmeraldas', 'Galápagos', 'Guayas','Imbabura', 'Loja', 'Los Ríos','Manabí', 'Morona Santiago','Napo',
-                'Orellana','Pastaza','Pichincha','Santa Elena','Santo Domingo de los Tsáchilas','Sucumbíos', 'Tungurahua','Zamora Chinchipe']
 
-prov1= ( "Camilo Ponce Enríquez","Chordeleg","Cuenca","El Pan","Girón","Guachapala", "Gualaceo","Nabón","Oña","Paute","Pucará", "San Fernando","Santa Isabel","Sevilla de Oro","Sigsig")
+provincias = ['Seleccione una Provincia', 'Azuay', 'Bolivar', 'Cañar', 'Carchi', 'Chimborazo', 'Cotopaxi', 'El Oro',
+            'Esmeraldas', 'Galápagos', 'Guayas', 'Imbabura', 'Loja', 'Los Ríos', 'Manabí', 'Morona Santiago','Napo',
+            'Orellana', 'Pastaza','Pichincha','Santa Elena', 'Santo Domingo de los Tsáchilas', 'Sucumbíos',
+            'Tungurahua', 'Zamora Chinchipe']
+
+prov1= ( "Camilo Ponce Enríquez","Chordeleg","Cuenca","El Pan","Girón","Guachapala", "Gualaceo","Nabón","Oña","Paute",
+         "Pucará", "San Fernando","Santa Isabel","Sevilla de Oro","Sigsig")
 prov2 = ("Caluma","Chillanes","Chimbo","Echeandía","Guaranda","Las Naves","San Miguel")
 prov3 = ("Azogues","Biblián","Cañar","Déleg","El Tambo","La Troncal")
 prov4 =("Bolívar","Espejo","Mira","Montúfar","Tulcán")
 prov5 = ( "Alausí","Chambo","Chunchi","Colta","Cumandá","Guamote","Guano","Pallatanga","Penipe","Riobamba")
 prov6 = ("La Maná","Latacunga","Pangua","Pujilí","Salcedo","Saquisilí","Sigchos")
-prov7 = ( "Arenillas","Atahualpa","Balsas","Chilla","El Guabo","Huaquillas","Isla Correa","Isla Matapalo","Las Lajas","Machala","Marcabelí","Pasaje","Piñas","Portovelo","Santa","Rosa","Zaruma")
+prov7 = ( "Arenillas","Atahualpa","Balsas","Chilla","El Guabo","Huaquillas","Isla Correa","Isla Matapalo","Las Lajas",
+          "Machala","Marcabelí","Pasaje","Piñas","Portovelo","Santa","Rosa","Zaruma")
 prov8 = ("Atacames","La Concordia","Eloy Alfaro","Esmeraldas","Muisne","Quinindé","Río Verde","San Lorenzo")
 prov9 = ("Isabela","San Cristóbal","Santa Cruz")
-prov10 = ("Alfredo Baquerizo Moreno (Jujan)","Balao","Balzar","Bucay","Colimes","Coronel Marcelino Mariduena","Cumanda","Daule","Eloy Alfaro (Durán)","El Empalme","El Triunfo","General Antonio Elizalde","Guayaquil","Isidro Ayora","Lomas de Sargentillo","Milagro (Durán)","Naranjal","Naranjito","Narcisa de Jesús (Nobol)","Palestina","Pedro Carbo","Playas (Durán)","General Villamil Playas","Samborondón","Salitre (Durán)","San Jacinto de Yaguachi","Santa Lucía (Durán)","Simón Bolívar (Durán)","Urbina Jado","San Jacinto de Yaguachi","Troncal (Durán)")
+prov10 = ("Alfredo Baquerizo Moreno (Jujan)","Balao","Balzar","Bucay","Colimes","Coronel Marcelino Mariduena","Cumanda",
+          "Daule","Eloy Alfaro (Durán)","El Empalme","El Triunfo","General Antonio Elizalde","Guayaquil","Isidro Ayora",
+          "Lomas de Sargentillo","Milagro (Durán)","Naranjal","Naranjito","Narcisa de Jesús (Nobol)","Palestina",
+          "Pedro Carbo","Playas (Durán)","General Villamil Playas","Samborondón","Salitre (Durán)",
+          "San Jacinto de Yaguachi","Santa Lucía (Durán)","Simón Bolívar (Durán)","Urbina Jado",
+          "San Jacinto de Yaguachi","Troncal (Durán)")
 prov11 = ("Antonio Ante","Cotacachi","Ibarra","Otavalo","Pimampiro","San Miguel de Urcuquí")
-prov12 =("Calvas","Catamayo Canton","Celica","Chaguarpamba","Espíndola","Gonzanamá","Loja","Macará","Paltas","Pindal","Puyango","Quilanga","Saraguro","Sozoranga","Zapotillo")
-prov13 = ("Baba","Babahoyo","Buena Fe","Mocache","Montalvo","Palenque","Pueblo Viejo","Quevedo","Urdaneta","Ventanas","Vinces")
-prov14 = ("Bolívar (Ecuador)","Chone","El Carmen (Ecuador)","Flavio Alfaro","Jama","Jaramijó","Jipijapa","Junín","Manta (Ecuador)","Montecristi (Ecuador)","Olmedo (Ecuador)","Paján","Pedernales","Pichincha","Portoviejo","Puerto Lopéz","Rocafuerte","San Vicente","Santa Ana (Ecuador)","Sucre (Ecuador)","Tosagua","Veinticuatro de Mayo")
-prov15 =("Gualaquiza","Huamboya","Limón Indanza","Logroño (Ecuador)","Morona","Pablo Sexto","Palora","San Juan Bosco (Ecuador)","Santiago (Ecuador)","Sucúa","Taisha","Tiwinza")
+prov12 = ("Calvas","Catamayo Canton","Celica","Chaguarpamba","Espíndola","Gonzanamá","Loja","Macará","Paltas","Pindal",
+         "Puyango","Quilanga","Saraguro","Sozoranga","Zapotillo")
+prov13 = ("Baba","Babahoyo","Buena Fe","Mocache","Montalvo","Palenque","Pueblo Viejo","Quevedo","Urdaneta","Ventanas",
+          "Vinces")
+prov14 = ("Bolívar (Ecuador)","Chone","El Carmen (Ecuador)","Flavio Alfaro","Jama","Jaramijó","Jipijapa","Junín",
+          "Manta (Ecuador)","Montecristi (Ecuador)","Olmedo (Ecuador)","Paján","Pedernales","Pichincha","Portoviejo",
+          "Puerto Lopéz","Rocafuerte","San Vicente","Santa Ana (Ecuador)","Sucre (Ecuador)",
+          "Tosagua","Veinticuatro de Mayo")
+prov15 =("Gualaquiza","Huamboya","Limón Indanza","Logroño (Ecuador)","Morona","Pablo Sexto","Palora",
+         "San Juan Bosco (Ecuador)","Santiago (Ecuador)","Sucúa","Taisha","Tiwinza")
 prov16 = ( "Archidona","Carlos Luis Arosemena Tola","El Chaco","Quijos","Tena")
 prov17 =("Aguarico","Francisco de Orellana","Joya de los Sachas","Loreto")
 prov18 = ("Arajuno","Mera","Pastaza","Santa Clara (Ecuador)")
-prov19 = ("Cayambe","Mejía","Pedro Moncayo","Pedro Vicente Maldonado","Puerto Quito","Quito","Rumiñahui","San Miguel de los Bancos")
-prov20 = ( "La Libertad (Ecuador)","Salinas (Ecuador)","Santa Elena (Ecuador)")
-prov21 = ("Santo Domingo de los Colorados")
+prov19 = ("Cayambe","Mejía","Pedro Moncayo","Pedro Vicente Maldonado","Puerto Quito","Quito","Rumiñahui",
+          "San Miguel de los Bancos")
+prov20 = ("La Libertad (Ecuador)","Salinas (Ecuador)","Santa Elena (Ecuador)")
+prov21 = "Santo Domingo de los Colorados"
 prov22 = ("Cascales","Cuyabeno","Gonzalo Pizarro","Lago Agrio","Putumayo","Shushufindi","Sucumbios")
 prov23 = ("Ambato","Baños (Ecuador)","Cevallos","Mocha","Patate","Pelileo")
-prov24 = ("Centinela del Cóndor","Chinchipe","El Pangui","Palanda","Paquisha","Nangaritza","Yacuambi","Yantzaza","Zamora (Ecuador)")
+prov24 = ("Centinela del Cóndor","Chinchipe","El Pangui","Palanda","Paquisha","Nangaritza","Yacuambi","Yantzaza",
+          "Zamora (Ecuador)")
 
 
 ciudades = {

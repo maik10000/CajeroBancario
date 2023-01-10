@@ -8,6 +8,8 @@ class Cajero:
     def registrar_usuario(self, nombre,cedula,clave,saldo,correo,numero_celular,numero_cuenta,ciudad,provincia):
         self.__bd_del_cajero.abrirConexion()
         self.__bd_del_cajero.insertarDatos({'apunta': 'usuario', 'valores': (numero_cuenta, nombre, cedula, numero_celular, saldo, correo, clave, self.verificar_ciudad(ciudad, provincia)[0][0])})
+
+
         self.__bd_del_cajero.cerrarConexion()
 
 
@@ -44,3 +46,17 @@ class Cajero:
             data = {'estado': False, 'res': "Esa cuenta no existe"}
         self.__bd_del_cajero.cerrar_conexion()
         return  data
+
+    def modo(self, modo = ""):
+        if modo.lower() == 'depositar':
+            return self.depositar
+        else:
+            return self.transferir
+
+    def depositar(self):
+        print('deposito')
+
+    def transferir(self):
+        print('transfirio')
+
+

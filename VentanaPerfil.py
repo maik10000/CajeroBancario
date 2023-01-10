@@ -2,7 +2,7 @@ import tkinter as tk
 import tkinter.font as tk_font
 import tkinter.ttk as ttk
 from PIL import ImageTk, Image
-from VentanaDeposito import VentanaDeposito
+from VentanaDepositoTransferencia import VentanaDepositoTransferencia
 import VentanaInicio as venI
 from estilos.colores import color_sistema
 color = color_sistema()
@@ -100,8 +100,8 @@ class VentanaPerfil(tk.Tk):
         botonSalir.place(x=956, y=620, width=172, height=45)
 
     def depositar(self):
-        if not VentanaDeposito.en_uso:
-            VentanaDeposito(num_cuenta=self.informacion.get_numero_cuenta())
+        if not VentanaDepositoTransferencia.en_uso:
+            VentanaDepositoTransferencia(num_cuenta=self.informacion.get_numero_cuenta(),mood='Depositar')
 
     def retirar(self):
         print("Retiro")
@@ -110,7 +110,8 @@ class VentanaPerfil(tk.Tk):
         print("Configurar")
 
     def transferir(self):
-        print("Trasnfirio")
+        if not VentanaDepositoTransferencia.en_uso:
+            VentanaDepositoTransferencia(num_cuenta=self.informacion.get_numero_cuenta())
 
     def verMovimientos(self):
         print("lista Movimientos")

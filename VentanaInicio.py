@@ -4,7 +4,7 @@ import tkinter.font as tkFont
 import tkinter.ttk as ttk
 from VentnanaRegistro import VentanaRegistro
 from VentanaPerfil import VentanaPerfil
-from util.Controladores import cotroller_sesion
+from util.Controladores import controller_sesion
 from estilos.colores import color_sistema
 import util.Cajero as cajero
 MONTO_INICIAL = 10
@@ -13,6 +13,7 @@ class VentanaInicio(tk.Tk):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.ventana_registro = None
         self.cj = cajero.Cajero()
         self.componentes()
 
@@ -57,7 +58,7 @@ class VentanaInicio(tk.Tk):
         #estilos inputs
         ttk.Style().theme_use('clam')
         ttk.Style().configure('pad.TEntry', padding='10 1 1 1',selectbackground = color.CELESTE_B9,insertcolor= color.VERDE_3D,bordercolor= color.GRIS_DD)
-        ttk.Style().configure('pad.TButton', foreground="#fff",background=color.VERDE_3D,bordercolor=color.GRIS_DD,font=("Cascadia Code",16))
+        ttk.Style().configure('pad.TButton', foreground=color.BLANCO,background=color.VERDE_3D,bordercolor=color.GRIS_DD,font=("Cascadia Code",16))
         ttk.Style().map('pad.TEntry',lightcolor =[('focus', color.VERDE_3D)])
         ttk.Style().map('pad.TButton',background =[('pressed', color.VERDE_30),('active', color.VERDE_3B)])
 
@@ -70,12 +71,12 @@ class VentanaInicio(tk.Tk):
         self.boton_iniciar = ttk.Button(frame, text="Iniciar", style="pad.TButton", command = self.iniciar_sesion)
         self.boton_iniciar.place(x=82, y=370, width=172, height=45)
 
-        self.boton_registrar = ttk.Button(frame, text="Registrarse", style="pad.TButton", command = self.abrir_ventana_regisrto)
+        self.boton_registrar = ttk.Button(frame, text="Registrarse", style="pad.TButton", command = self.abrir_ventana_registro)
         self.boton_registrar.place(x=350, y=370, width=172, height=45)
 
 
     def iniciar_sesion(self):
-       res =  cotroller_sesion(cuenta = self.input_usuario.get(), clave= self.input_pass.get(), callback = self.cj.cargar_usuario)
+       res =  controller_sesion(cuenta = self.input_usuario.get(), clave= self.input_pass.get(), callback = self.cj.cargar_usuario)
        if(res['estado']):
            self.destroy()
            ve_p = VentanaPerfil(info_user=res['userInfo'])
@@ -113,8 +114,10 @@ class VentanaInicio(tk.Tk):
         self.input_usuario['state'] = stado
         self.boton_iniciar['state'] = stado
 
-
-    def abrir_ventana_regisrto(self):
+    def abrir_ventana_registro(self):
         if not VentanaRegistro.en_uso:
-            self.ventana_registro = VentanaRegistro(callback2=self.desabilitar_ventan, callback = self.registrar_usuario, funete1 = self.font_style1, funete2= self.font_style2)
+            self.ventana_registro = VentanaRegistro(callback2=self.desabilitar_ventan,
+                                                    callback=self.registrar_usuario,
+                                                    funete1=self.font_style1,
+                                                    funete2=self.font_style2)
 
