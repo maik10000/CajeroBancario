@@ -13,7 +13,7 @@ class VentanaDepositoTransferencia(tk.Toplevel):
     def __init__(self, *args,num_cuenta = "",mood="", **kwargs):
         super().__init__(*args, **kwargs)
         self.__class__.en_uso = True
-        self.nume_cuenta = num_cuenta
+        self.num_cuenta = num_cuenta
         self.mood = mood
         self.componentes()
 
@@ -33,7 +33,7 @@ class VentanaDepositoTransferencia(tk.Toplevel):
         label = tk.Label(self, bg= color.VERDE_3B).place(x=64,y= 35, width=20, height=20)
         label = tk.Label(self, bg= color.VERDE_3B).place(x=35,y= 64, width=20, height=20)
         label = tk.Label(self, bg= color.AZUL_57).place(x=683,y= 52, width=75, height=500)
-        label = tk.Label(self, text="Deposito", font= self.font_style2, bg= color.BLANCO).place(x=332, y= 52)
+        label = tk.Label(self, text= self.mood, font= self.font_style2, bg= color.BLANCO).place(x=332, y= 52)
 
 
         label = tk.Label(self, text="Numero de cuenta:", font= self.font_style, bg=color.BLANCO).place(x=70, y=170)
@@ -45,37 +45,52 @@ class VentanaDepositoTransferencia(tk.Toplevel):
 
         boton_aceptar = ttk.Button(self,text="Aceptar",command=self.aceptarTransaccion)
         boton_aceptar.place(x=430, y= 403,width=150,height=40)
-        boton_cancelar = ttk.Button(self, text="Regresar")
+        boton_cancelar = ttk.Button(self, text="Cancelar", command=self.destroy)
         boton_cancelar.place(x=430, y=480, width=150, height=40)
 
     def aceptarTransaccion(self):
         num_b = self.num_cuenta_beneficiario.get()
         cant = self.cantidad.get()
-        cj = Cajero()
-        res = cj.buscar_cuenta(num_b)
+        res = Cajero().buscar_cuenta(num_b)
         if num_b !='' and cant != '':
             if not Comprobante.en_uso and res['estado']:
                 cadena_oculta = "xxxxxxxxxx"
                 Comprobante(nombre_beneficiario=res['userInfo'][0],
                             num_cuenta_beneficiario=num_b.replace(num_b[6:len(num_b)], cadena_oculta),
                             monto_efectivo=cant,
-                            num_cuenta_usuario=self.nume_cuenta.replace(self.nume_cuenta[6:len(self.nume_cuenta)],
-                                                                        cadena_oculta),
+                            num_cuenta_usuario=self.num_cuenta.replace(self.num_cuenta[6:len(self.num_cuenta)],
+                                                                       cadena_oculta),
                             correo_beneficiario=res['userInfo'][1],
-                            callback=cj.modo(modo=self.mood)
+                            callback=self.realizar_transaccion
                             )
             else:
                 print("Error usuario no encontrado")
         else:
             print("LLene los campos")
 
+    def realizar_transaccion(self, confirm = False):
+
+        if self.mood.lower() == 'depositar' and confirm:
+
+            Cajero().depositar(self.cantidad.get(), self.num_cuenta_beneficiario.get())
+            self.destroy()
+        elif self.mood.lower() == 'transferencia' and confirm:
+
+            Cajero().transferir()
+
+        else:
+            print('Upps! hubo un error')
+
+    def destroy(self):
+        self.__class__.en_uso = False
+        return super().destroy()
 
 
 class Comprobante(tk.Toplevel):
     en_uso = False
 
     def __init__(self, *args, nombre_beneficiario="", num_cuenta_usuario="", num_cuenta_beneficiario="",
-                 correo_beneficiario="", monto_efectivo="", callback = None,titulo ="", **kwargs):
+                 correo_beneficiario="", monto_efectivo="", callback=None,titulo="", **kwargs):
 
         super().__init__(*args,**kwargs)
         self.__class__.en_uso = True
@@ -94,7 +109,7 @@ class Comprobante(tk.Toplevel):
         self.title(self.titulo)
         self.geometry('500x800')
         self.resizable(False, False)
-        self.configure(bg= color.BLANCO)
+        self.configure(bg=color.BLANCO)
 
         # stilos
         self.font_style = tk_font.Font(family="Cascadia Code", size=20, slant="italic", weight="bold")
@@ -144,6 +159,15 @@ class Comprobante(tk.Toplevel):
 
         label = tk.Label(self,bg= color.BLANCO, foreground=color.VERDE_00, text="$"+ self.monto_efectivo,font= self.font_style3).place(x=329,y=564)
 
-        boton_confirmar =  ttk.Button(self,text="Confirmar").place(x=163,y=640,width=174,height=40)
-        boton_cancelar =  ttk.Button(self,text="Cancelar").place(x=163,y=700,width=174,height=40)
+        self.boton_confirmar =  ttk.Button(self,text="Confirmar", command=self.confirmar).place(x=163,y=640,width=174,height=40)
+        self.boton_cancelar =  ttk.Button(self,text="Cancelar", command=self.destroy).place(x=163,y=700,width=174,height=40)
+
+    def confirmar(self):
+        self.callback(True)
+        self.destroy()
+
+    def destroy(self):
+        self.__class__.en_uso = False
+        return super().destroy()
+
 

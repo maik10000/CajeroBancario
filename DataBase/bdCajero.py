@@ -13,7 +13,8 @@ rutas_de_comandos_sql = {
                      'buscar':"SELECT ID_Prov FROM provicia WHERE PROVINCIA = %s"
                     },
         'cuentas':{
-                    'buscar':'SELECT Nombre_Apellido, correo FROM usuario WHERE NCuenta = %s'
+                    'buscar':'SELECT Nombre_Apellido, correo FROM usuario WHERE NCuenta = %s',
+                    'actualizar': 'CALL acutalizacionSaldo(%s,%s)'
                 }
 }
 
@@ -41,8 +42,11 @@ class DBCajero:
         puntero.execute(comand_sql,data['valores'])
         return puntero.fetchall()
 
+    def actualzar_datos(self, data):
+        puntero = self.__conexion.cursor()
+        comand_sql = rutas_de_comandos_sql[data['apunta']]['actualizar']
+        puntero.execute(comand_sql,data['valores'])
+        self.__conexion.commit()
 
     def cerrar_conexion(self):
         self.__conexion.close()
-
-

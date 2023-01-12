@@ -11,7 +11,7 @@ class VentanaRegistro(tk.Toplevel):
     def __init__(self, *args,callback2=None, callback = None,funete1  = None ,funete2 = None, **kwargs):
         super().__init__(*args, **kwargs)
         self.__callback = callback
-        self.__callback2= callback2
+        self.__callback2 = callback2
         self.fuente1 = funete1
         self.fuente2 = funete2
         self.componentes()

@@ -47,14 +47,11 @@ class Cajero:
         self.__bd_del_cajero.cerrar_conexion()
         return  data
 
-    def modo(self, modo = ""):
-        if modo.lower() == 'depositar':
-            return self.depositar
-        else:
-            return self.transferir
-
-    def depositar(self):
-        print('deposito')
+    def depositar(self, monto, cuenta_beneficiaria):
+        data = {'apunta': 'cuentas', 'valores': (monto, cuenta_beneficiaria)}
+        self.__bd_del_cajero.abrir_conexion()
+        self.__bd_del_cajero.actualzar_datos(data)
+        self.__bd_del_cajero.cerrar_conexion()
 
     def transferir(self):
         print('transfirio')
