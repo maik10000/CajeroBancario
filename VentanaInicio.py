@@ -9,6 +9,7 @@ from estilos.colores import color_sistema
 import util.Cajero as cajero
 MONTO_INICIAL = 10
 color = color_sistema()
+
 class VentanaInicio(tk.Tk):
 
     def __init__(self, *args, **kwargs):

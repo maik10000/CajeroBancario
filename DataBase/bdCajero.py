@@ -1,22 +1,35 @@
 import MySQLdb
 
 rutas_de_comandos_sql = {
-        'usuario': {'insertar':"INSERT INTO usuario (NCuenta,Nombre_Apellido,cedula,telefono,saldo,correo,clave,index_ciudad) VALUES(%s,%s,%s,%s,%s,%s,%s,%s)",
-                    'buscar':"CALL filtradoUsuarioXCIoNC(%s,%s)"
-                    },
+    'usuario': {
+        'insertar': "INSERT INTO usuario (NCuenta,Nombre_Apellido,cedula,telefono,saldo,correo,clave,index_ciudad) "
+                    "VALUES(%s,%s,%s,%s,%s,%s,%s,%s)",
+        'buscar': "CALL filtradoUsuarioXCIoNC(%s,%s)"
+    },
 
-        'ciudad': {'insertar':"INSERT INTO ciudad (CIUDAD,Idf_provincia) VALUES(%s,%s)",
-                   'buscar':"SELECT ID_Ciudad  FROM ciudad WHERE CIUDAD = %s"
-                   },
+    'ciudad': {
+        'insertar': "INSERT INTO ciudad (CIUDAD,Idf_provincia) VALUES(%s,%s)",
+        'buscar': "SELECT ID_Ciudad  FROM ciudad WHERE CIUDAD = %s"
+    },
 
-        'provincia':{'insertar':"",
-                     'buscar':"SELECT ID_Prov FROM provicia WHERE PROVINCIA = %s"
-                    },
-        'cuentas':{
-                    'buscar':'SELECT Nombre_Apellido, correo FROM usuario WHERE NCuenta = %s',
-                    'actualizar': 'CALL acutalizacionSaldo(%s,%s)'
-                }
+    'provincia': {
+        'buscar': "SELECT ID_Prov FROM provicia WHERE PROVINCIA = %s"
+    },
+
+    'cuentas': {
+        'buscar': 'SELECT Nombre_Apellido, correo FROM usuario WHERE NCuenta = %s',
+    },
+
+    'depositar': {
+        'procesar': 'CALL depositoBancario(%s,%s)'
+    },
+
+    'transferencia': {
+        'buscar': 'SELECT saldo FROM usuario WHERE NCuenta = %s',
+        'procesar': 'CALL transferenciaBancaria(%s,%s,%s)'
+    }
 }
+
 
 class DBCajero:
     def __init__(self):
@@ -28,9 +41,10 @@ class DBCajero:
         self.__conexion = None
 
     def abrir_conexion(self):
-        self.__conexion = MySQLdb.connect(host = self.__host, user = self.__bd_usuario, passwd = self.__pass, port = self.__port, database = self.__db_nombre)
+        self.__conexion = MySQLdb.connect(host=self.__host, user=self.__bd_usuario, passwd=self.__pass,
+                                          port=self.__port, database=self.__db_nombre)
 
-    def insertar_datos(self,data):
+    def insertar_datos(self, data):
         puntero = self.__conexion.cursor()
         comand_sql = rutas_de_comandos_sql[data['apunta']]['insertar']
         puntero.execute(comand_sql, data['valores'])
@@ -42,10 +56,10 @@ class DBCajero:
         puntero.execute(comand_sql,data['valores'])
         return puntero.fetchall()
 
-    def actualzar_datos(self, data):
+    def procesar_transaccion(self, data):
         puntero = self.__conexion.cursor()
-        comand_sql = rutas_de_comandos_sql[data['apunta']]['actualizar']
-        puntero.execute(comand_sql,data['valores'])
+        comand_sql = rutas_de_comandos_sql[data['apunta']]['procesar']
+        puntero.execute(comand_sql, data['valores'])
         self.__conexion.commit()
 
     def cerrar_conexion(self):

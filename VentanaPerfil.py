@@ -12,10 +12,10 @@ class VentanaPerfil(tk.Tk):
 
     def __init__(self, *args, info_user=None, **kwargs):
         super().__init__(*args, **kwargs)
-        self.informacion = info_user
+
+        self.info_usuario = info_user
 
         # font style
-
         self.fontStyle = tk_font.Font(family="Cascadia Code", size=25, slant="italic", weight="bold")
         self.fontStyle2 = tk_font.Font(family="Cascadia Code", size=30, slant="italic", weight="bold")
         self.fontStyle3 = tk_font.Font(family="Cascadia Code", size=20, slant="italic", weight="bold")
@@ -23,22 +23,22 @@ class VentanaPerfil(tk.Tk):
 
     def componentes(self):
 
-        self.title("Bienvenido " + self.informacion.get_nombre())
+        self.title("Bienvenido " + self.info_usuario.get_nombre())
         self.geometry("1270x720")
         self.resizable(False, False)
         self.configure(bg=color.BLANCO)
 
         # nombre_Perfil
 
-        label_nombre = tk.Label(self, text=self.informacion.get_nombre(), font=self.fontStyle, bg=color.BLANCO,
+        label_nombre = tk.Label(self, text=self.info_usuario.get_nombre(), font=self.fontStyle, bg=color.BLANCO,
                                 foreground=color.NEGRO_39)
         label_nombre.place(x=60, y=50)
 
-        label = tk.Label(self, text=self.informacion.get_numero_cuenta(), font=self.fontStyle3, bg=color.BLANCO,
+        label = tk.Label(self, text=self.info_usuario.get_numero_cuenta(), font=self.fontStyle3, bg=color.BLANCO,
                          foreground=color.GRIS_B6)
         label.place(x=75, y=100)
 
-        label_price = tk.Label(self,text ="$"+str(self.informacion.get_saldo()), font=self.fontStyle2, bg=color.BLANCO,
+        label_price = tk.Label(self, text ="$"+str(self.info_usuario.get_saldo()), font=self.fontStyle2, bg=color.BLANCO,
                                foreground=color.VERDE_40)
 
         label_price.place(x=761, y=56, width=367, height=50)
@@ -101,10 +101,9 @@ class VentanaPerfil(tk.Tk):
 
     def depositar(self):
         if not VentanaDepositoTransferencia.en_uso:
-            VentanaDepositoTransferencia(num_cuenta=self.informacion.get_numero_cuenta(),mood='Depositar')
+            VentanaDepositoTransferencia(num_cuenta=self.info_usuario.get_numero_cuenta(), mood='Depositar')
 
     def retirar(self):
-
         print("Retiro")
 
     def ajustarUsuario(self):
@@ -112,15 +111,16 @@ class VentanaPerfil(tk.Tk):
 
     def transferir(self):
         if not VentanaDepositoTransferencia.en_uso:
-            VentanaDepositoTransferencia(num_cuenta=self.informacion.get_numero_cuenta(), mood='Transferencia')
+            VentanaDepositoTransferencia(num_cuenta=self.info_usuario.get_numero_cuenta(), mood='Transferencia')
 
     def ver_movimientos(self):
         print("lista Movimientos")
 
     def salir(self):
-
         self.destroy()
         ventana_inicio = venI.VentanaInicio()
         ventana_inicio.mainloop()
+
+
 
 

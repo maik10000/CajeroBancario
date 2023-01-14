@@ -48,12 +48,24 @@ class Cajero:
         return  data
 
     def depositar(self, monto, cuenta_beneficiaria):
-        data = {'apunta': 'cuentas', 'valores': (monto, cuenta_beneficiaria)}
+        data = {'apunta': 'depositar', 'valores': (monto, cuenta_beneficiaria)}
         self.__bd_del_cajero.abrir_conexion()
-        self.__bd_del_cajero.actualzar_datos(data)
+        self.__bd_del_cajero.procesar_transaccion(data)
         self.__bd_del_cajero.cerrar_conexion()
 
-    def transferir(self):
-        print('transfirio')
+    def transferir(self, cuenta_beneficieria, cuenta_benefactor, monto):
+        data = {'apunta': 'transferencia', 'valores': (cuenta_benefactor,)}
+        self.__bd_del_cajero.abrir_conexion()
+        res = self.__bd_del_cajero.buscar_datos(data)
+        if float(res[0][0] > monto):
+            data = {'apunta': 'transferencia', 'valores': (cuenta_beneficieria, cuenta_benefactor, monto)}
+            self.__bd_del_cajero.procesar_transaccion(data)
+            self.__bd_del_cajero.cerrar_conexion()
+            return {'estate':'Transaccion exitosa'}
+
+        self.__bd_del_cajero.cerrar_conexion()
+        return {'estate': 'Saldo insuficiente'}
+
+
 
 

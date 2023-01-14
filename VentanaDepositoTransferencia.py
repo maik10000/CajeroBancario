@@ -61,48 +61,54 @@ class VentanaDepositoTransferencia(tk.Toplevel):
                             num_cuenta_usuario=self.num_cuenta.replace(self.num_cuenta[6:len(self.num_cuenta)],
                                                                        cadena_oculta),
                             correo_beneficiario=res['userInfo'][1],
-                            callback=self.realizar_transaccion
+                            callback=self.realizar_transaccion,
+                            callback2=self.desabilitar_ventan
                             )
             else:
                 print("Error usuario no encontrado")
         else:
             print("LLene los campos")
 
-    def realizar_transaccion(self, confirm = False):
+    def realizar_transaccion(self, confirm=False):
 
         if self.mood.lower() == 'depositar' and confirm:
 
             Cajero().depositar(self.cantidad.get(), self.num_cuenta_beneficiario.get())
-            self.destroy()
         elif self.mood.lower() == 'transferencia' and confirm:
 
-            Cajero().transferir()
-
+            Cajero().transferir(self.num_cuenta_beneficiario.get(), self.num_cuenta, self.cantidad.get())
         else:
             print('Upps! hubo un error')
+        self.destroy()
 
     def destroy(self):
         self.__class__.en_uso = False
         return super().destroy()
+
+    def desabilitar_ventan(self, stado):
+        self.num_cuenta_beneficiario['state'] = stado
+        self.cantidad['state'] = stado
 
 
 class Comprobante(tk.Toplevel):
     en_uso = False
 
     def __init__(self, *args, nombre_beneficiario="", num_cuenta_usuario="", num_cuenta_beneficiario="",
-                 correo_beneficiario="", monto_efectivo="", callback=None,titulo="", **kwargs):
+                 correo_beneficiario="", monto_efectivo="", callback=None, callback2=None,titulo="", **kwargs):
 
         super().__init__(*args,**kwargs)
         self.__class__.en_uso = True
         self.nombre_beneficiario = nombre_beneficiario
         self.num_origen= num_cuenta_usuario
         self.callback = callback
+        self.__callback2 = callback2
         self.titulo = titulo
         self.num_destino = num_cuenta_beneficiario
         self.correo_beneficiario = correo_beneficiario
         self.fecha = time.strftime("%Y-%m-%d")
         self.num_comprobante = ""
-        self.monto_efectivo  = monto_efectivo
+        self.monto_efectivo = monto_efectivo
+        self.__callback2('disable')
         self.componentes()
 
     def componentes(self):
@@ -168,6 +174,7 @@ class Comprobante(tk.Toplevel):
 
     def destroy(self):
         self.__class__.en_uso = False
+        self.__callback2('normal')
         return super().destroy()
 
 
