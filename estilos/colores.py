@@ -3,6 +3,7 @@ class color_sistema:
         self.CELESTE_B9 = '#93DFB9'
         self.AZUL_57 = "#0E4C57"
         self.AZUL_75 = "#017175"
+        self.AZUL_38 = "#013438"
         self.VERDE_67="#018A67"
         self.VERDE_3D="#5E803D"
         self.VERDE_30="#4B6730"

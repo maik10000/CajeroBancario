@@ -4,9 +4,9 @@ rutas_de_comandos_sql = {
     'usuario': {
         'insertar': "INSERT INTO usuario (NCuenta,Nombre_Apellido,cedula,telefono,saldo,correo,clave,index_ciudad) "
                     "VALUES(%s,%s,%s,%s,%s,%s,%s,%s)",
-        'buscar': "CALL filtradoUsuarioXCIoNC(%s,%s)"
+        'buscar': "CALL filtradoUsuarioXCIoNC(%s,%s)",
+        'actualizar': 'CALL penalizar(%s)'
     },
-
     'ciudad': {
         'insertar': "INSERT INTO ciudad (CIUDAD,Idf_provincia) VALUES(%s,%s)",
         'buscar': "SELECT ID_Ciudad  FROM ciudad WHERE CIUDAD = %s"
@@ -17,7 +17,7 @@ rutas_de_comandos_sql = {
     },
 
     'cuentas': {
-        'buscar': 'SELECT Nombre_Apellido, correo FROM usuario WHERE NCuenta = %s',
+        'buscar': 'SELECT Nombre_Apellido, correo FROM usuario WHERE NCuenta = %s'
     },
 
     'depositar': {
@@ -27,6 +27,21 @@ rutas_de_comandos_sql = {
     'transferencia': {
         'buscar': 'SELECT saldo FROM usuario WHERE NCuenta = %s',
         'procesar': 'CALL transferenciaBancaria(%s,%s,%s)'
+    },
+    'retiro': {
+        'procesar': 'CALL retiroBancario(%s,%s)'
+    },
+    'admins': {
+        'buscar': 'CALL filtradAdmins(%s,%s)'
+    },
+    'validar_usuario': {
+        'buscar': 'CALL val_usuario(%s)'
+
+    },'validar_admin':{
+        'buscar': 'CALL val_admi(%s)'},
+
+    'penalizados':{
+        'buscar':'SELECT strike FROM usuario WHERE NCuenta = %s'
     }
 }
 
@@ -56,6 +71,7 @@ class DBCajero:
         puntero.execute(comand_sql,data['valores'])
         return puntero.fetchall()
 
+
     def procesar_transaccion(self, data):
         puntero = self.__conexion.cursor()
         comand_sql = rutas_de_comandos_sql[data['apunta']]['procesar']
@@ -64,3 +80,14 @@ class DBCajero:
 
     def cerrar_conexion(self):
         self.__conexion.close()
+
+    def get_lista_usuarios(self,comando,cuenta):
+        puntero = self.__conexion.cursor()
+        puntero.execute(comando, (cuenta,))
+        return puntero.fetchall()
+
+    def penalizar(self,data):
+        puntero = self.__conexion.cursor()
+        comand_sql = rutas_de_comandos_sql[data['apunta']]['actualizar']
+        puntero.execute(comand_sql,data['valores'])
+        self.__conexion.commit()

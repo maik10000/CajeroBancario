@@ -1,23 +1,24 @@
 class Admin:
-    def __init__(self, nombre, cedula, correo):
-        self.__nombre = nombre
-        self.__cedula = cedula
-        self.__correo = correo
+    def __init__(self, nombre, nombre_usuario,correo_ad):
 
-    def get_nombre(self):
+        self.__nombre = nombre
+        self.__nombre_usuario = nombre_usuario
+        self.__correo_ad = correo_ad
+
+    def get_correo_a(self):
+        return self.__correo_ad
+
+    def get_nombre_a(self):
         return self.__nombre
 
-    def get_cedula(self):
-        return self.__cedula
+    def get_nombre_usuario(self):
+        return self.__nombre_usuario
 
-    def get_correo(self):
-        return self.__correo
+    def set_correo_a(self, correo_a):
+        self.__correo_ad=correo_a
 
-    def set_nombre(self, nombre):
+    def set_nombre_a(self, nombre):
         self.__nombre = nombre
 
-    def set_cedula(self, cedula):
-        self.__cedula = cedula
-
-    def set_correo(self, correo):
-        self.__correo = correo
+    def set_nombre_usuario(self, nombre_usuario):
+        self.__nombre_usuario = nombre_usuario

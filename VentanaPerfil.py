@@ -3,6 +3,7 @@ import tkinter.font as tk_font
 import tkinter.ttk as ttk
 from PIL import ImageTk, Image
 from VentanaDepositoTransferencia import VentanaDepositoTransferencia
+from VentanaAjustes import VentanaAjustes
 import VentanaInicio as venI
 from estilos.colores import color_sistema
 color = color_sistema()
@@ -107,7 +108,10 @@ class VentanaPerfil(tk.Tk):
         print("Retiro")
 
     def ajustarUsuario(self):
+        if not VentanaAjustes.en_uso:
+            VentanaAjustes(info_usuario=self.info_usuario)
         print("Configurar")
+
 
     def transferir(self):
         if not VentanaDepositoTransferencia.en_uso:
@@ -115,6 +119,8 @@ class VentanaPerfil(tk.Tk):
 
     def ver_movimientos(self):
         print("lista Movimientos")
+
+
 
     def salir(self):
         self.destroy()

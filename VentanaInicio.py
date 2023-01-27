@@ -1,20 +1,20 @@
-import random
 import tkinter as tk
 import tkinter.font as tkFont
 import tkinter.ttk as ttk
-from VentnanaRegistro import VentanaRegistro
 from VentanaPerfil import VentanaPerfil
+from VentanaPerfilAdmin import VentanaPerfilAdmin
 from util.Controladores import controller_sesion
 from estilos.colores import color_sistema
 import util.Cajero as cajero
-MONTO_INICIAL = 10
 color = color_sistema()
+
 
 class VentanaInicio(tk.Tk):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.ventana_registro = None
+        self.intentos = 3
         self.cj = cajero.Cajero()
         self.componentes()
 
@@ -36,7 +36,7 @@ class VentanaInicio(tk.Tk):
 
         #Laberl decorativos
         label = tk.Label(self,bg=color.AZUL_57).place(x=60,y=125,width=75,height=500)
-        label = tk.Label(self,bg= color.AZUL_75).place(x=620,y=65,width=415,height=50)
+        label = tk.Label(self,bg=color.AZUL_75).place(x=620,y=65,width=415,height=50)
         label = tk.Label(self,bg=color.AZUL_75).place(x=1052,y=65,width=40,height=50)
         label = tk.Label(self,bg=color.VERDE_67).place(x=1103,y=65,width=30,height=50)
         label = tk.Label(self,bg=color.VERDE_67).place(x=1146,y=65,width=20,height=50)
@@ -69,56 +69,64 @@ class VentanaInicio(tk.Tk):
         self.input_pass = ttk.Entry(frame, show="*", font=("Cascadia Code", 16), foreground=color.AMARILLO_3E, style='pad.TEntry')
         self.input_pass.place(x=82, y=209, width=432, height=45)
         #botones
-        self.boton_iniciar = ttk.Button(frame, text="Iniciar", style="pad.TButton", command = self.iniciar_sesion)
-        self.boton_iniciar.place(x=82, y=370, width=172, height=45)
+        self.boton_iniciar = ttk.Button(frame, text="Iniciar", style="pad.TButton", command =self.iniciar_sesion )
+        self.boton_iniciar.place(x=200,y=370, width=172, height=45)
+        self.boton_iniciar.bind_all('<KeyPress>', self.eventos_teclado)
+        self.label_aviso = tk.Label(self, foreground=color.ROJO_1A, bg=color.BLANCO,
+                               font=self.font_style3)
 
-        self.boton_registrar = ttk.Button(frame, text="Registrarse", style="pad.TButton", command = self.abrir_ventana_registro)
-        self.boton_registrar.place(x=350, y=370, width=172, height=45)
+
+    def eventos_teclado(self,e):
+        if e.char == '\r':
+            self.iniciar_sesion()
 
 
     def iniciar_sesion(self):
-       res =  controller_sesion(cuenta = self.input_usuario.get(), clave= self.input_pass.get(), callback = self.cj.cargar_usuario)
-       if(res['estado']):
-           self.destroy()
-           ve_p = VentanaPerfil(info_user=res['userInfo'])
-           ve_p.mainloop()
-       else:
-           label_aviso = tk.Label(self, text=res['res'], foreground=color.ROJO_1A,bg= color.BLANCO,font= self.font_style3)
-           label_aviso.place(x=550,y=500)
 
-    def registrar_usuario(self, nombre, cedula, clave, correo, telefono, ciudad, provicia):
-        print("Usuario Registrado con exito!")
-        self.cj.registrar_usuario(nombre, cedula, clave, MONTO_INICIAL, correo, telefono, self.generar_cuenta(cedula, telefono), ciudad, provicia)
-        self.mostrar_aviso_confirmacion()
+        val = self.cj.usuario_bloqueado(self.input_usuario.get())
+        if len(val) == 0:
+            val = 0
+        else:
+            val = self.cj.usuario_bloqueado(self.input_usuario.get())[0][1]
 
-    def generar_cuenta(self, cedula, telefono):
-        cd =""
-        while(len(cd)<13):
-            x1 = int(cedula[2:6])*int(cedula[8:9])*1523*int(telefono[2:5])
-            x2 = random.randint(0,100)
-            cd = "100"+ str(x1) + str(x2)
-        return cd
-
-    def mostrar_aviso_confirmacion(self):
-        self.aviso = tk.Label(self, text="Usuario Registrado con exito!", foreground=color.VERDE_00, bg= color.VERDE_4C, font=("Cascadia Code", 12))
-        btn_cerrar = tk.Label(self.aviso, text="X", foreground=color.VERDE_00, bg=color.VERDE_4C, font=("Cascadia Code", 10))
-        btn_cerrar.place(x=280, y=-1, width=20, height=20)
-        btn_cerrar.bind('<Button-1>', self.cerrar_ventana_aviso)
-        self.aviso.place(x=0, y=0, width=300, height=40)
+        if val != 1:
+            res = controller_sesion(cuenta=self.input_usuario.get(), clave= self.input_pass.get(),
+                                    callback=self.cj.cargar_usuario)
 
 
-    def cerrar_ventana_aviso(self, evento):
-        self.aviso.destroy()
+            if res['estado'] and res['res'] == 'user':
+               self.destroy()
+               ve_p = VentanaPerfil(info_user=res['userInfo'])
+               ve_p.mainloop()
+            elif res['estado'] and res['res'] == 'admin':
+                self.destroy()
+                ven_a = VentanaPerfilAdmin(info_user_a=res['userInfo'])
+                ven_a.mainloop()
+            else:
+                self.aviso(res=res)
+        else:
+            self.intentos = 0
+            self.aviso({'estado':False})
 
-    def desabilitar_ventan(self, stado):
-        self.input_pass['state'] = stado
-        self.input_usuario['state'] = stado
-        self.boton_iniciar['state'] = stado
+    def aviso(self,res):
 
-    def abrir_ventana_registro(self):
-        if not VentanaRegistro.en_uso:
-            self.ventana_registro = VentanaRegistro(callback2=self.desabilitar_ventan,
-                                                    callback=self.registrar_usuario,
-                                                    funete1=self.font_style1,
-                                                    funete2=self.font_style2)
+        if res['estado'] and self.intentos > 0:
+            if res['entity'] == 'user':
+                self.intentos -= 1
+                self.label_aviso['text'] = res['res'] + ', le quedan ' + str(self.intentos)
+                self.label_aviso.place(x=420, y=500)
+            else:
+                self.label_aviso['text'] = res['res']
+                self.label_aviso.place(x=420, y=500)
+
+        elif self.intentos == 0 :
+            self.label_aviso['text'] = 'Lo sentimos su cuenta esta bloqueada'
+            self.label_aviso.place(x=460, y=500)
+            self.input_usuario['state'] = 'disable'
+            self.input_pass['state'] = 'disable'
+            self.cj.bloquearUsuario(self.input_usuario.get())
+        else:
+
+            self.label_aviso['text'] = res['res']
+            self.label_aviso.place(x=520, y=500)
 
