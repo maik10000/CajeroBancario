@@ -28,12 +28,3 @@ def controller_regsitro(nombre, cedula, celular, correo, clave1, clave2):
         return [False, 'Error ingrese una clave valida']
 
     return [True, 'Regitro Exitoso']
-
-
-def controller_sesion(cuenta="", clave="", callback=None):
-
-    if cuenta != '' and clave != '' and cuenta != ' ' and clave != ' ':
-        res = callback(cuenta, clave)
-        return res
-    else:
-        return {'estado': False, 'res': 'Llene todos los campos'}

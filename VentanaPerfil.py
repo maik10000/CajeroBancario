@@ -4,12 +4,15 @@ import tkinter.ttk as ttk
 from PIL import ImageTk, Image
 from VentanaDepositoTransferencia import VentanaDepositoTransferencia
 from VentanaAjustes import VentanaAjustes
+from  VentanaRetiro import VentanaRetiro
 import VentanaInicio as venI
 from estilos.colores import color_sistema
 color = color_sistema()
 
 
 class VentanaPerfil(tk.Tk):
+    ANCHO = 1270
+    ALTO = 720
 
     def __init__(self, *args, info_user=None, **kwargs):
         super().__init__(*args, **kwargs)
@@ -24,8 +27,12 @@ class VentanaPerfil(tk.Tk):
 
     def componentes(self):
 
+        ancho_pantalla = self.winfo_screenwidth()
+        altura_pantalla = self.winfo_screenheight()
+        x = (ancho_pantalla // 2) - (self.__class__.ANCHO // 2)
+        y = (altura_pantalla // 2) - (self.__class__.ALTO // 2)
+        self.geometry(f'{self.__class__.ANCHO}x{self.__class__.ALTO}+{x}+{y}')
         self.title("Bienvenido " + self.info_usuario.get_nombre())
-        self.geometry("1270x720")
         self.resizable(False, False)
         self.configure(bg=color.BLANCO)
 
@@ -69,8 +76,9 @@ class VentanaPerfil(tk.Tk):
         ttk.Style().theme_use('clam')
         ttk.Style().configure('pad.TButton', background=color.AZUL_75, bordercolor=color.VERDE_3D)
         ttk.Style().configure('pad2.TButton', background=color.AMARILLO_33, bordercolor=color.BLANCO_EE)
-        ttk.Style().configure('pad3.TButton', foreground=color.BLANCO, background=color.AMARILLO_3E, bordercolor=color.BLANCO_EE, font=("Cascadia Code", 16))
-        ttk.Style().map('pad.TButton', background=[('pressed', color.VERDE_30), ('active', color.VERDE_3B)]   )
+        ttk.Style().configure('pad3.TButton', foreground=color.BLANCO, background=color.AMARILLO_3E,
+                              bordercolor=color.BLANCO_EE, font=("Cascadia Code", 16))
+        ttk.Style().map('pad.TButton', background=[('pressed', color.VERDE_30), ('active', color.VERDE_3B)])
         ttk.Style().map('pad2.TButton', background=[('pressed', color.AMARILLO_21), ('active', color.AMARILLO_30)])
         ttk.Style().map('pad3.TButton', background=[('pressed', color.AMARILLO_2F), ('active', color.AMARILLO_39)])
 
@@ -78,7 +86,7 @@ class VentanaPerfil(tk.Tk):
         boton_deposito.imagen = icono1
         boton_retiro = ttk.Button(self,style="pad.TButton",image= icono2, command= self.retirar)
         boton_retiro.image = icono2
-        boton_ajustes = ttk.Button(self,style="pad2.TButton",image= icono3, command= self.ajustarUsuario)
+        boton_ajustes = ttk.Button(self,style="pad2.TButton",image= icono3, command= self.ajustar_usuario)
         boton_ajustes.image = icono3
         boton_transferencia = ttk.Button(self,style="pad.TButton",image= icono4, command= self.transferir)
         boton_transferencia.image = icono4
@@ -105,13 +113,12 @@ class VentanaPerfil(tk.Tk):
             VentanaDepositoTransferencia(num_cuenta=self.info_usuario.get_numero_cuenta(), mood='Depositar')
 
     def retirar(self):
-        print("Retiro")
+        if not VentanaRetiro.en_uso:
+            VentanaRetiro(numero_cuenta=self.info_usuario.get_numero_cuenta())
 
-    def ajustarUsuario(self):
+    def ajustar_usuario(self):
         if not VentanaAjustes.en_uso:
             VentanaAjustes(info_usuario=self.info_usuario)
-        print("Configurar")
-
 
     def transferir(self):
         if not VentanaDepositoTransferencia.en_uso:

@@ -1,11 +1,12 @@
-import MySQLdb
+import mysql.connector as MySQLdb
 
 rutas_de_comandos_sql = {
     'usuario': {
         'insertar': "INSERT INTO usuario (NCuenta,Nombre_Apellido,cedula,telefono,saldo,correo,clave,index_ciudad) "
                     "VALUES(%s,%s,%s,%s,%s,%s,%s,%s)",
-        'buscar': "CALL filtradoUsuarioXCIoNC(%s,%s)",
-        'actualizar': 'CALL penalizar(%s)'
+        'buscar': "CALL vaSe(%s,%s)",
+        'banear': 'CALL penalizar(%s)',
+        'actualizar': "CALL acU(%s,%s,%s,%s,%s,%s)"
     },
     'ciudad': {
         'insertar': "INSERT INTO ciudad (CIUDAD,Idf_provincia) VALUES(%s,%s)",
@@ -21,27 +22,27 @@ rutas_de_comandos_sql = {
     },
 
     'depositar': {
-        'procesar': 'CALL depositoBancario(%s,%s)'
+        'procesar': 'CALL deB(%s,%s)'
     },
 
     'transferencia': {
         'buscar': 'SELECT saldo FROM usuario WHERE NCuenta = %s',
-        'procesar': 'CALL transferenciaBancaria(%s,%s,%s)'
+        'procesar': 'CALL trb(%s,%s,%s)'
     },
     'retiro': {
-        'procesar': 'CALL retiroBancario(%s,%s)'
+        'procesar': 'CALL reB(%s,%s)'
     },
     'admins': {
-        'buscar': 'CALL filtradAdmins(%s,%s)'
+        'buscar': 'CALL fad(%s,%s)'
     },
     'validar_usuario': {
-        'buscar': 'CALL val_usuario(%s)'
+        'buscar': 'CALL vu(%s)'
 
-    },'validar_admin':{
-        'buscar': 'CALL val_admi(%s)'},
+    }, 'validar_admin': {
+        'buscar': 'CALL va(%s)'},
 
-    'penalizados':{
-        'buscar':'SELECT strike FROM usuario WHERE NCuenta = %s'
+    'penalizados': {
+        'buscar': 'SELECT strike FROM usuario WHERE NCuenta = %s'
     }
 }
 
@@ -55,9 +56,11 @@ class DBCajero:
         self.__db_nombre = 'u846314360_DBBancodillera'
         self.__conexion = None
 
+
     def abrir_conexion(self):
         self.__conexion = MySQLdb.connect(host=self.__host, user=self.__bd_usuario, passwd=self.__pass,
                                           port=self.__port, database=self.__db_nombre)
+
 
     def insertar_datos(self, data):
         puntero = self.__conexion.cursor()
@@ -66,10 +69,12 @@ class DBCajero:
         self.__conexion.commit()
 
     def buscar_datos(self, data):
+
         puntero = self.__conexion.cursor()
         comand_sql = rutas_de_comandos_sql[data['apunta']]['buscar']
         puntero.execute(comand_sql,data['valores'])
-        return puntero.fetchall()
+        dat = puntero.fetchall()
+        return dat
 
 
     def procesar_transaccion(self, data):
@@ -88,6 +93,14 @@ class DBCajero:
 
     def penalizar(self,data):
         puntero = self.__conexion.cursor()
-        comand_sql = rutas_de_comandos_sql[data['apunta']]['actualizar']
+        comand_sql = rutas_de_comandos_sql[data['apunta']]['banear']
         puntero.execute(comand_sql,data['valores'])
         self.__conexion.commit()
+
+
+    def actualiza_usuario(self,data):
+        puntero = self.__conexion.cursor()
+        comand_sql = rutas_de_comandos_sql[data['apunta']]['actualizar']
+        puntero.execute(comand_sql, data['valores'])
+        self.__conexion.commit()
+

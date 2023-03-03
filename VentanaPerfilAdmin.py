@@ -7,61 +7,62 @@ import VentanaInicio as venI
 import random
 from util.Cajero import Cajero
 from DataBase.bdCajero import DBCajero
-rutas_comandos ={
-    'volcar': {
-        'buscar': 'CALL listaUsuarios(%s)'}
-}
+
 color = color_sistema()
 MONTO_INICIAL = 10
 list_head = ('NCuenta', 'Nombre', 'Cedula', 'Celular', 'Correo', 'Ciudad', 'Provincia', 'Saldo-Efectivo', 'Contraseña')
 
+
 class VentanaPerfilAdmin(tk.Tk):
+    ANCHO = 1270
+    ALTO = 720
 
     def __init__(self, *args, info_user_a=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.info = info_user_a
         self.componentes()
 
-
     def componentes(self):
+        ancho_pantalla = self.winfo_screenwidth()
+        altura_pantalla = self.winfo_screenheight()
+        x = (ancho_pantalla // 2) - (self.__class__.ANCHO // 2)
+        y = (altura_pantalla // 2) - (self.__class__.ALTO // 2)
+        self.geometry(f'{self.__class__.ANCHO}x{self.__class__.ALTO}+{x}+{y}')
         self.title("Administrador")
         self.resizable(False, False)
-        self.geometry('1270x720')
         self.configure(bg=color.BLANCO)
 
         font_style3 = tk_font.Font(family="Cascadia Code", size=20, slant="italic", weight="bold")
         font_style2 = tk_font.Font(family="Cascadia Code", size=30, slant="italic")
-        font_style1 = tk_font.Font(family="Cascadia Code", size=44, slant="italic", weight="bold")
-
 
         ttk.Style().theme_use('clam')
         ttk.Style().configure('pad.TButton', foreground=color.BLANCO, background=color.VERDE_3D,
                               bordercolor=color.GRIS_DD, font=("Cascadia Code", 16))
         ttk.Style().map('pad.TButton', background=[('pressed', color.VERDE_30), ('active', color.VERDE_3B)])
 
-        label = tk.Label(self,text='Administrador',bg=color.BLANCO,font= font_style2)
-        label.place(x=490,y=30)
+        label = tk.Label(self, text='Administrador', bg=color.BLANCO, font=font_style2)
+        label.place(x=490, y=30)
 
         label = tk.Label(self, text=self.info.get_nombre_a(), font=font_style3, bg=color.BLANCO,
                          foreground=color.GRIS_B6)
         label.place(x=50, y=100)
 
-        btn_registrar = ttk.Button(self,text='Registrar',command=self.abrir_ventana_registro)
+        btn_registrar = ttk.Button(self, text='Registrar', command=self.abrir_ventana_registro)
         btn_registrar.place(x=205, y=160)
 
-        btn_eliminar = ttk.Button(self,text='Eliminar')
-        btn_eliminar.place(x=441,y=160)
+        btn_eliminar = ttk.Button(self, text='Eliminar')
+        btn_eliminar.place(x=441, y=160)
 
-        btn_buscar = ttk.Button(self,text='Buscar')
-        btn_buscar.place(x=677,y=160)
+        btn_buscar = ttk.Button(self, text='Buscar')
+        btn_buscar.place(x=677, y=160)
 
-        btn_editar = ttk.Button(self,text='Editar')
-        btn_editar.place(x=913,y=160)
+        btn_editar = ttk.Button(self, text='Editar')
+        btn_editar.place(x=913, y=160)
 
         self.lista_usuarios()
 
-        btn_salir = ttk.Button(self,text='Regresar',style='pad.TButton',command=self.regresar)
-        btn_salir.place(x=944,y=655)
+        btn_salir = ttk.Button(self, text='Regresar', style='pad.TButton', command=self.regresar)
+        btn_salir.place(x=944, y=655)
 
     def lista_usuarios(self):
         frame = tk.Frame(self)
@@ -72,21 +73,21 @@ class VentanaPerfilAdmin(tk.Tk):
         scroll_y = ttk.Scrollbar(frame)
         scroll_y.pack(side='right', fill='y')
 
-
         self.__lista_usuarios = ttk.Treeview(frame, columns=list_head,
                                              xscrollcommand=scroll_x.set, yscrollcommand=scroll_y.set)
 
-        self.__lista_usuarios.heading('#0', text='ID', anchor='center')
+        self.__lista_usuarios.heading('0', text='ID', anchor='center')
 
         for i in list_head:
             self.__lista_usuarios.heading(i, text=i, anchor='center')
 
         db = DBCajero()
         db.abrir_conexion()
-        res = db.get_lista_usuarios('CALL listaUsuarios(%s)',self.info.get_nombre_usuario())
+        res = db.get_lista_usuarios('CALL uList(%s)', self.info.get_nombre_usuario())
         db.cerrar_conexion()
         for i in res:
-            self.__lista_usuarios.insert('','end',text=i[0], values=(i[1], i[2], i[3], i[4], i[6], i[9], i[10],i[5],i[7]))
+            self.__lista_usuarios.insert('', 'end', text=i[0],
+                                         values=(i[1], i[2], i[3], i[4], i[6], i[9], i[10], i[5], i[7]))
 
         self.__lista_usuarios.place(x=0, y=0, width=1010, height=403)
         scroll_x.config(command=self.__lista_usuarios.xview)
@@ -97,15 +98,16 @@ class VentanaPerfilAdmin(tk.Tk):
         self.lista_usuarios()
 
     def limpiar_lista(self):
-       self.__lista_usuarios.destroy()
+        self.__lista_usuarios.destroy()
 
     def mostrar_aviso_confirmacion(self):
-        self.aviso = tk.Label(self, text="Usuario Registrado con exito!", foreground=color.VERDE_00, bg= color.VERDE_4C, font=("Cascadia Code", 12))
-        btn_cerrar = tk.Label(self.aviso, text="X", foreground=color.VERDE_00, bg=color.VERDE_4C, font=("Cascadia Code", 10))
+        self.aviso = tk.Label(self, text="Usuario Registrado con exito!", foreground=color.VERDE_00, bg=color.VERDE_4C,
+                              font=("Cascadia Code", 12))
+        btn_cerrar = tk.Label(self.aviso, text="X", foreground=color.VERDE_00, bg=color.VERDE_4C,
+                              font=("Cascadia Code", 10))
         btn_cerrar.place(x=280, y=-1, width=20, height=20)
         btn_cerrar.bind('<Button-1>', self.cerrar_ventana_aviso)
         self.aviso.place(x=0, y=0, width=300, height=40)
-
 
     def cerrar_ventana_aviso(self, evento):
         self.aviso.destroy()
@@ -115,9 +117,8 @@ class VentanaPerfilAdmin(tk.Tk):
         cj = Cajero()
 
         cj.registrar_usuario(nombre, cedula, clave, MONTO_INICIAL, correo, telefono,
-                                 self.generar_cuenta(cedula, telefono), ciudad, provicia)
+                             self.generar_cuenta(cedula, telefono), ciudad, provicia)
         self.mostrar_aviso_confirmacion()
-
 
     def generar_cuenta(self, cedula, telefono):
         cd = ""
@@ -127,16 +128,12 @@ class VentanaPerfilAdmin(tk.Tk):
             cd = "100" + str(x1) + str(x2)
         return cd
 
-
     def abrir_ventana_registro(self):
         if not VentanaRegistro.en_uso:
             self.ventana_registro = VentanaRegistro(callback=self.registrar_usuario,
                                                     callback2=self.actualizar)
 
-
     def regresar(self):
         self.destroy()
         ventana_inicio = venI.VentanaInicio()
         ventana_inicio.mainloop()
-
-

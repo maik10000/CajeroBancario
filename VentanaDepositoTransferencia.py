@@ -21,8 +21,12 @@ class VentanaDepositoTransferencia(tk.Toplevel):
         self.componentes()
 
     def componentes(self):
+        ancho_pantalla = self.winfo_screenwidth()
+        altura_pantalla = self.winfo_screenheight()
+        x = (ancho_pantalla // 2) - (800 // 2)
+        y = (altura_pantalla // 2) - (600 // 2)
+        self.geometry(f'{800}x{600}+{x}+{y}')
         self.title(self.mood)
-        self.geometry('800x600')
         self.resizable(False, False)
         self.configure(bg=color.BLANCO)
 
@@ -53,27 +57,41 @@ class VentanaDepositoTransferencia(tk.Toplevel):
         self.cantidad = ttk.Entry(self)
         self.cantidad.place(x=70, y=400, width=250, height=40)
 
-        boton_aceptar = ttk.Button(self, text="Aceptar", command=self.aceptar_transa)
+        ttk.Style().theme_use('clam')
+        ttk.Style().configure('pad.TButton', foreground=color.BLANCO, background=color.VERDE_3D,
+                              bordercolor=color.GRIS_DD, font=("Cascadia Code", 15))
+        ttk.Style().configure('pad2.TButton', foreground=color.BLANCO, background=color.AZUL_38,
+                              bordercolor=color.GRIS_DD, font=("Cascadia Code", 15))
+
+        ttk.Style().map('pad.TButton', background=[('pressed', color.VERDE_30), ('active', color.VERDE_3B)])
+        ttk.Style().map('pad2.TButton', background=[('pressed', color.VERDE_30), ('active', color.AZUL_57)])
+
+        boton_aceptar = ttk.Button(self, text="Aceptar", command=self.aceptar_transa, style='pad.TButton')
         boton_aceptar.place(x=430, y=403, width=150, height=40)
-        boton_cancelar = ttk.Button(self, text="Cancelar", command=self.destroy)
+
+        boton_cancelar = ttk.Button(self, text="Cancelar", command=self.destroy, style='pad2.TButton')
         boton_cancelar.place(x=430, y=480, width=150, height=40)
 
     def aceptar_transa(self):
         num_b = self.num_cuenta_beneficiario.get()
         cant = self.cantidad.get()
+
         res = Cajero().buscar_cuenta(num_b)
         if num_b != '' and cant != '':
             if not Comprobante.en_uso and res['estado']:
-                cadena_oculta = "xxxxxxxxxx"
-                Comprobante(nombre_beneficiario=res['userInfo'][0],
-                            num_cuenta_beneficiario=num_b.replace(num_b[6:len(num_b)], cadena_oculta),
-                            monto_efectivo=cant,
-                            num_cuenta_usuario=self.num_cuenta.replace(self.num_cuenta[6:len(self.num_cuenta)],
-                                                                       cadena_oculta),
-                            correo_beneficiario=res['userInfo'][1],
-                            callback=self.realizar_transaccion,
-                            callback2=self.desabilitar_ventan
-                            )
+                if cant.isdigit():
+                    cadena_oculta = "xxxxxxxxxx"
+                    Comprobante(nombre_beneficiario=res['userInfo'][0],
+                                num_cuenta_beneficiario=num_b.replace(num_b[6:len(num_b)], cadena_oculta),
+                                monto_efectivo=cant,
+                                num_cuenta_usuario=self.num_cuenta.replace(self.num_cuenta[6:len(self.num_cuenta)],
+                                                                           cadena_oculta),
+                                correo_beneficiario=res['userInfo'][1],
+                                callback=self.realizar_transaccion,
+                                callback2=self.desabilitar_ventan
+                                )
+                else:
+                    print('Ingrese numeros')
             else:
                 print("Error usuario no encontrado")
         else:
@@ -201,9 +219,10 @@ class Comprobante(tk.Toplevel):
         self.destroy()
         self.callback(True)
 
-
     def destroy(self):
         self.__class__.en_uso = False
         self.__callback2('normal')
         return super().destroy()
 
+#v = VentanaDepositoTransferencia(num_cuenta='1001884333273034',mood='depositar')
+#v.mainloop()
