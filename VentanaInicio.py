@@ -40,9 +40,12 @@ class VentanaInicio(tk.Tk):
         label.place(x=60, y=40)
 
         # Laberl decorativos
-        label = tk.Label(self, bg=color.AZUL_57).place(x=60, y=125, width=75, height=500)
-        label = tk.Label(self, bg=color.AZUL_75).place(x=620, y=65, width=415, height=50)
-        label = tk.Label(self, bg=color.AZUL_75).place(x=1052, y=65, width=40, height=50)
+        label = tk.Label(self, bg=color.AZUL_57)
+        label.place(x=60, y=125, width=75, height=500)
+        label = tk.Label(self, bg=color.AZUL_75)
+        label.place(x=620, y=65, width=415, height=50)
+        label = tk.Label(self, bg=color.AZUL_75)
+        label.place(x=1052, y=65, width=40, height=50)
         label = tk.Label(self, bg=color.VERDE_67).place(x=1103, y=65, width=30, height=50)
         label = tk.Label(self, bg=color.VERDE_67).place(x=1146, y=65, width=20, height=50)
         label = tk.Label(self, bg=color.VERDE_3D).place(x=1121, y=209, width=50, height=364)
@@ -94,7 +97,7 @@ class VentanaInicio(tk.Tk):
             val_c = self.cj.valida_cuentas(usuario)
             # print(val)
             if val_c['estado']:
-                val = self.cj.usuario_bloqueado(usuario)
+                val = self.cj.usuario_bloqueado(usuario,val_c['rol'])
                 # print(val)
                 if val[0][1] != 1:
                     val = self.cj.cargar_usuario(usuario, pwss)
@@ -136,3 +139,4 @@ class VentanaInicio(tk.Tk):
             self.input_usuario['state'] = 'disable'
             self.input_pass['state'] = 'disable'
             self.cj.bloquearUsuario(self.input_usuario.get())
+

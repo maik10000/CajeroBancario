@@ -11,11 +11,10 @@ color = color_sistema()
 class VentanaDepositoTransferencia(tk.Toplevel):
     en_uso = False
 
-    def __init__(self, *args, num_cuenta="", mood="", **kwargs):
+    def __init__(self, *args, num_cuenta="", mood="", actualizar=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.__class__.en_uso = True
-        self.num_cuenta_beneficiario = None
-        self.cantidad = None
+        self.actualizar = actualizar
         self.num_cuenta = num_cuenta
         self.mood = mood
         self.componentes()
@@ -44,7 +43,7 @@ class VentanaDepositoTransferencia(tk.Toplevel):
         label = tk.Label(self, bg=color.VERDE_3B)
         label.place(x=35, y=64, width=20, height=20)
         label = tk.Label(self, bg=color.AZUL_57)
-        label.place(x=683, y=52, width=75, height=500)
+        label.place(x=683, y=20, width=75, height=500)
         label = tk.Label(self, text=self.mood, font=self.font_style2, bg=color.BLANCO)
         label.place(x=332, y=52)
 
@@ -52,7 +51,7 @@ class VentanaDepositoTransferencia(tk.Toplevel):
         label.place(x=70, y=170)
         self.num_cuenta_beneficiario = ttk.Entry(self)
         self.num_cuenta_beneficiario.place(x=70, y=240, width=432, height=40)
-        label = tk.Label(self, text="Monto a depositar:", font=self.font_style, bg=color.BLANCO)
+        label = tk.Label(self, text="Ingrese el monto:", font=self.font_style, bg=color.BLANCO)
         label.place(x=70, y=324)
         self.cantidad = ttk.Entry(self)
         self.cantidad.place(x=70, y=400, width=250, height=40)
@@ -72,46 +71,98 @@ class VentanaDepositoTransferencia(tk.Toplevel):
         boton_cancelar = ttk.Button(self, text="Cancelar", command=self.destroy, style='pad2.TButton')
         boton_cancelar.place(x=430, y=480, width=150, height=40)
 
+        fuente = ("Cascadia Code", 15)
+        self.mensaje_1 = tk.Label(self, bg=color.BLANCO, font=fuente)
+
     def aceptar_transa(self):
         num_b = self.num_cuenta_beneficiario.get()
         cant = self.cantidad.get()
 
-        res = Cajero().buscar_cuenta(num_b)
-        if num_b != '' and cant != '':
-            if not Comprobante.en_uso and res['estado']:
-                if cant.isdigit():
-                    cadena_oculta = "xxxxxxxxxx"
-                    Comprobante(nombre_beneficiario=res['userInfo'][0],
-                                num_cuenta_beneficiario=num_b.replace(num_b[6:len(num_b)], cadena_oculta),
-                                monto_efectivo=cant,
-                                num_cuenta_usuario=self.num_cuenta.replace(self.num_cuenta[6:len(self.num_cuenta)],
-                                                                           cadena_oculta),
-                                correo_beneficiario=res['userInfo'][1],
-                                callback=self.realizar_transaccion,
-                                callback2=self.desabilitar_ventan
-                                )
+        if num_b.replace(' ', '') != '' and cant.replace(' ', '') != '':
+            if not (num_b == self.num_cuenta and self.mood.lower() == 'transferencia'):
+                r = self.validar_cantidad(self.mood, cant=cant)
+                if r['state']:
+                    res = Cajero().buscar_cuenta(num_b)
+                    if not Comprobante.en_uso and res['estado']:
+                        cadena_oculta = "xxxxxxxxxx"
+                        Comprobante(nombre_beneficiario=res['userInfo'][0],
+                                    num_cuenta_beneficiario=num_b.replace(num_b[6:len(num_b)], cadena_oculta),
+                                    monto_efectivo=r['val'],
+                                    num_cuenta_usuario=self.num_cuenta.replace(self.num_cuenta[6:len(self.num_cuenta)],
+                                                                               cadena_oculta),
+                                    correo_beneficiario=res['userInfo'][1],
+                                    callback=self.realizar_transaccion,
+                                    callback2=self.desabilitar_ventan
+                                    )
+                        self.mostrar_mense("")
+                    else:
+                        self.mostrar_mense("No se a encontrado el usuario")
                 else:
-                    print('Ingrese numeros')
+                    self.mostrar_mense(r['msj'])
             else:
-                print("Error usuario no encontrado")
+                self.mostrar_mense('No se puede hacer transferencia a su misma cuenta')
         else:
-            print("LLene los campos")
+            self.mostrar_mense("Llene todos los campos")
+
+    def mostrar_mense(self, mjs):
+        self.mensaje_1['foreground'] = color.ROJO_1A
+        self.mensaje_1['text'] = mjs
+        i = (self.winfo_width() // 2) - ((len(mjs) * 12) // 2)
+        self.mensaje_1.place(x=i, y=540)
+
+    def validar_cantidad(self, modd='', cant=''):
+
+        if modd.lower() == 'depositar':
+            try:
+                c = int(cant)
+                if c % 5 == 0:
+                    if 0.5 < c < 15000:
+                        return {'state': True, 'msj': 'Valido', 'val': c}
+                    else:
+                        return {'state': False, 'msj': 'El monto tiene que ser de 0.5 hasta 15.000'}
+                else:
+                    return {'state': False, 'msj': 'Sistema solo puede procesar cantidades multiplos de 5'}
+
+            except ValueError:
+                return {'state': False, 'msj': 'Ingrese numeros enteros'}
+
+        elif modd.lower() == 'transferencia':
+            num = cant.split('.')
+            s = len(num)
+            if s == 2:
+                if not len(num[1]) < 3:
+                    return {'state': False, 'msj': 'No se puede procesar esa cantidad'}
+
+            try:
+                c = float(cant)
+                if 0.5 < c < 15000:
+                    return {'state': True, 'msj': 'Valido', 'val': c}
+                else:
+                    return {'state': False, 'msj': 'El monto tiene que ser de 0.5 hasta 15.000'}
+            except ValueError:
+                return {'state': False, 'msj': 'Ingrese una cantidad numerica'}
+
+        else:
+            print('Algo salio mal')
 
     def realizar_transaccion(self, confirm=False):
+        c = float(self.cantidad.get())
 
         if self.mood.lower() == 'depositar' and confirm:
-
-            res = Cajero().depositar(self.cantidad.get(), self.num_cuenta_beneficiario.get())
-            print(res)
+            res = Cajero().depositar(c, self.num_cuenta_beneficiario.get())
+            if self.num_cuenta_beneficiario.get() == self.num_cuenta:
+                self.actualizar(c)
+            self.mostrar_mense(res['estate'])
 
         elif self.mood.lower() == 'transferencia' and confirm:
+            res = Cajero().transferir(self.num_cuenta_beneficiario.get(), self.num_cuenta, c)
 
-            res = Cajero().transferir(self.num_cuenta_beneficiario.get(), self.num_cuenta, self.cantidad.get())
-            print(res)
+            self.actualizar(c)
+            self.mostrar_mense(res['estate'])
         else:
             print('Upps! hubo un error')
-        self.destroy()
-
+        self.num_cuenta_beneficiario.delete('0','end')
+        self.cantidad.delete('0','end')
     def destroy(self):
         self.__class__.en_uso = False
         return super().destroy()
@@ -205,7 +256,7 @@ class Comprobante(tk.Toplevel):
 
         label = tk.Label(self,
                          bg=color.BLANCO, foreground=color.VERDE_00,
-                         text="$" + self.monto_efectivo,
+                         text="$" + str(self.monto_efectivo),
                          font=self.font_style3)
         label.place(x=329, y=564)
 
@@ -224,5 +275,5 @@ class Comprobante(tk.Toplevel):
         self.__callback2('normal')
         return super().destroy()
 
-#v = VentanaDepositoTransferencia(num_cuenta='1001884333273034',mood='depositar')
-#v.mainloop()
+# v = VentanaDepositoTransferencia(num_cuenta='1001884333273034',mood='depositar')
+# v.mainloop()

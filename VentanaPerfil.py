@@ -4,9 +4,10 @@ import tkinter.ttk as ttk
 from PIL import ImageTk, Image
 from VentanaDepositoTransferencia import VentanaDepositoTransferencia
 from VentanaAjustes import VentanaAjustes
-from  VentanaRetiro import VentanaRetiro
+from VentanaRetiro import VentanaRetiro
 import VentanaInicio as venI
 from estilos.colores import color_sistema
+
 color = color_sistema()
 
 
@@ -46,10 +47,11 @@ class VentanaPerfil(tk.Tk):
                          foreground=color.GRIS_B6)
         label.place(x=75, y=100)
 
-        label_price = tk.Label(self, text ="$"+str(self.info_usuario.get_saldo()), font=self.fontStyle2, bg=color.BLANCO,
-                               foreground=color.VERDE_40)
+        self.label_price = tk.Label(self, text="$" + str(self.info_usuario.get_saldo()), font=self.fontStyle2,
+                                    bg=color.BLANCO,
+                                    foreground=color.VERDE_40)
 
-        label_price.place(x=761, y=56, width=367, height=50)
+        self.label_price.place(x=761, y=56, width=367, height=50)
 
         # Botones de perfil
 
@@ -82,24 +84,32 @@ class VentanaPerfil(tk.Tk):
         ttk.Style().map('pad2.TButton', background=[('pressed', color.AMARILLO_21), ('active', color.AMARILLO_30)])
         ttk.Style().map('pad3.TButton', background=[('pressed', color.AMARILLO_2F), ('active', color.AMARILLO_39)])
 
-        boton_deposito = ttk.Button(self,style="pad.TButton",image=icono1, command= self.depositar)
+        boton_deposito = ttk.Button(self, style="pad.TButton", image=icono1, command=self.depositar)
         boton_deposito.imagen = icono1
-        boton_retiro = ttk.Button(self,style="pad.TButton",image= icono2, command= self.retirar)
+        boton_retiro = ttk.Button(self, style="pad.TButton", image=icono2, command=self.retirar)
         boton_retiro.image = icono2
-        boton_ajustes = ttk.Button(self,style="pad2.TButton",image= icono3, command= self.ajustar_usuario)
+        boton_ajustes = ttk.Button(self, style="pad2.TButton", image=icono3, command=self.ajustar_usuario)
         boton_ajustes.image = icono3
-        boton_transferencia = ttk.Button(self,style="pad.TButton",image= icono4, command= self.transferir)
+        boton_transferencia = ttk.Button(self, style="pad.TButton", image=icono4, command=self.transferir)
         boton_transferencia.image = icono4
-        boton_movimientos = ttk.Button(self, style="pad.TButton", image= icono5, command= self.ver_movimientos)
+        boton_movimientos = ttk.Button(self, style="pad.TButton", image=icono5, command=self.ver_movimientos)
         boton_movimientos.image = icono5
 
-        botonSalir = ttk.Button(self,style="pad3.TButton", text="SALIR", command= self.salir)
+        botonSalir = ttk.Button(self, style="pad3.TButton", text="SALIR", command=self.salir)
 
-        label = tk.Label(self,text= "Deposito",font= self.fontStyle3,bg=color.BLANCO, foreground=color.GRIS_4D).place(x= 239, y= 240)
-        label = tk.Label(self,text= "Retiro",font= self.fontStyle3,bg=color.BLANCO, foreground=color.GRIS_4D).place(x= 239, y= 425)
-        label = tk.Label(self,text= "Ajustes de Usuario",font= self.fontStyle3,bg=color.BLANCO, foreground=color.GRIS_4D).place(x= 239, y= 597)
-        label = tk.Label(self,text= "Transferencias",font= self.fontStyle3,bg=color.BLANCO, foreground=color.GRIS_4D).place(x= 815, y= 240)
-        label = tk.Label(self,text= "Mis Movimientos",font= self.fontStyle3,bg=color.BLANCO, foreground=color.GRIS_4D).place(x= 815, y= 425)
+        label = tk.Label(self, text="Deposito", font=self.fontStyle3, bg=color.BLANCO, foreground=color.GRIS_4D)
+        label.place(x=239, y=240)
+        label = tk.Label(self, text="Retiro", font=self.fontStyle3, bg=color.BLANCO, foreground=color.GRIS_4D)
+        label.place(x=239, y=425)
+        label = tk.Label(self, text="Cambiar contraseña", font=self.fontStyle3, bg=color.BLANCO,
+                         foreground=color.GRIS_4D)
+        label.place(x=239, y=597)
+        label = tk.Label(self, text="Transferencias", font=self.fontStyle3, bg=color.BLANCO,
+                         foreground=color.GRIS_4D)
+        label.place(x=815, y=240)
+        label = tk.Label(self, text="Mis Movimientos", font=self.fontStyle3, bg=color.BLANCO,
+                         foreground=color.GRIS_4D)
+        label.place(x=815, y=425)
 
         boton_deposito.place(x=60, y=210, width=100, height=100)
         boton_retiro.place(x=60, y=400, width=100, height=100)
@@ -110,11 +120,12 @@ class VentanaPerfil(tk.Tk):
 
     def depositar(self):
         if not VentanaDepositoTransferencia.en_uso:
-            VentanaDepositoTransferencia(num_cuenta=self.info_usuario.get_numero_cuenta(), mood='Depositar')
+            VentanaDepositoTransferencia(num_cuenta=self.info_usuario.get_numero_cuenta(),
+                                         actualizar=self.actualizar_depositos, mood='Depositar')
 
     def retirar(self):
         if not VentanaRetiro.en_uso:
-            VentanaRetiro(numero_cuenta=self.info_usuario.get_numero_cuenta())
+            VentanaRetiro(numero_cuenta=self.info_usuario.get_numero_cuenta(), actualizar=self.actualizacion_retiro)
 
     def ajustar_usuario(self):
         if not VentanaAjustes.en_uso:
@@ -122,18 +133,24 @@ class VentanaPerfil(tk.Tk):
 
     def transferir(self):
         if not VentanaDepositoTransferencia.en_uso:
-            VentanaDepositoTransferencia(num_cuenta=self.info_usuario.get_numero_cuenta(), mood='Transferencia')
+            VentanaDepositoTransferencia(num_cuenta=self.info_usuario.get_numero_cuenta(),
+                                         actualizar=self.actualizacion_retiro, mood='Transferencia')
 
     def ver_movimientos(self):
         print("lista Movimientos")
-
-
 
     def salir(self):
         self.destroy()
         ventana_inicio = venI.VentanaInicio()
         ventana_inicio.mainloop()
 
+    def actualizacion_retiro(self, value):
+        v = self.info_usuario.get_saldo() - value
+        self.info_usuario.set_saldo(v)
+        self.label_price['text'] = v
 
-
+    def actualizar_depositos(self, value):
+        v = self.info_usuario.get_saldo() + value
+        self.info_usuario.set_saldo(v)
+        self.label_price['text'] = v
 

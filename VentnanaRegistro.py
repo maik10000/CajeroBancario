@@ -3,6 +3,7 @@ import tkinter.ttk as ttk
 from util.Controladores import controller_regsitro
 import tkinter.font as tk_font
 from estilos.colores import color_sistema
+from util.Cajero import Cajero
 
 color = color_sistema()
 
@@ -80,13 +81,17 @@ class VentanaRegistro(tk.Toplevel):
                          bg=color.BLANCO).place(x=0, y=400)
         self.combo_box_prov = ttk.Combobox(frame_registro, font=("Cascadia Code", 15), style='pad.TCombobox',
                                            state="readonly")
+
+        res = Cajero().prov_ciudades()
         self.combo_box_prov.place(x=0, y=440, width=470, height=36)
-        self.combo_box_prov['values'] = provincias
+        self.combo_box_prov['values'] = res['provincia']
         self.combo_box_prov.current(0)
-        self.combo_box_prov.bind("<<ComboboxSelected>>", self.cambiar_ciudades)
+        self.combo_box_prov.bind("<<ComboboxSelected>>",
+                                 lambda e, ciudad=res['ciudad']: self.cambiar_ciudades(e, ciudad))
         # Formulario 2
         frame_registro2 = tk.Frame(self, width=430, height=472, bg=color.BLANCO)
         frame_registro2.place(x=680, y=160)
+
         # Ciudad
         label = tk.Label(frame_registro2, font=font_style2, text="Ciudad:", foreground=color.NEGRO_44,
                          bg=color.BLANCO).place(x=0, y=0)
@@ -119,6 +124,8 @@ class VentanaRegistro(tk.Toplevel):
 
     def registrar(self):
         # Valida todos lso campos
+        selec = self.combo_box_cuidad.current()
+        selec = self.index_cidades[selec]
         respuesta = controller_regsitro(self.input_nombre.get(),
                                         self.input_cedula.get(),
                                         self.input_celular.get(),
@@ -126,14 +133,14 @@ class VentanaRegistro(tk.Toplevel):
                                         self.input_clave.get(),
                                         self.input_clave2)
         if respuesta[0]:
+
             if self.flag_prov:
                 self.__callback(self.input_nombre.get(),
                                 self.input_cedula.get(),
                                 self.input_clave.get(),
                                 self.input_correo.get(),
                                 self.input_celular.get(),
-                                self.combo_box_cuidad.get(),
-                                self.combo_box_prov.get())
+                                selec)
                 self.__callback2()
                 self.destroy()
             else:
@@ -141,94 +148,20 @@ class VentanaRegistro(tk.Toplevel):
         else:
             self.label_aviso['text'] = respuesta[1]
 
-    def cambiar_ciudades(self, event):
-        if self.combo_box_prov.get() != 'Seleccione una Provincia':
-            self.combo_box_cuidad['values'] = ciudades[self.combo_box_prov.get()]
+    def cambiar_ciudades(self, event, ciudades):
+        s = self.combo_box_prov.current()
+        ciu = []
+        self.index_cidades = []
+        if s != 0:
+            for j in ciudades:
+                if j[2] == s:
+                    ciu.append(j[1])
+                    self.index_cidades.append(j[0])
+
+            self.combo_box_cuidad['values'] = ciu
             self.combo_box_cuidad.current(0)
             self.flag_prov = True
         else:
             self.combo_box_cuidad['values'] = ['Seleccione una cuidad']
             self.combo_box_cuidad.current(0)
             self.flag_prov = False
-
-
-provincias = ['Seleccione una Provincia', 'Azuay', 'Bolivar', 'Cañar', 'Carchi', 'Chimborazo', 'Cotopaxi', 'El Oro',
-              'Esmeraldas', 'Galápagos', 'Guayas', 'Imbabura', 'Loja', 'Los Ríos', 'Manabí', 'Morona Santiago', 'Napo',
-              'Orellana', 'Pastaza', 'Pichincha', 'Santa Elena', 'Santo Domingo de los Tsáchilas', 'Sucumbíos',
-              'Tungurahua', 'Zamora Chinchipe']
-
-prov1 = (
-    "Camilo Ponce Enríquez", "Chordeleg", "Cuenca", "El Pan", "Girón", "Guachapala", "Gualaceo", "Nabón", "Oña",
-    "Paute",
-    "Pucará", "San Fernando", "Santa Isabel", "Sevilla de Oro", "Sigsig")
-prov2 = ("Caluma", "Chillanes", "Chimbo", "Echeandía", "Guaranda", "Las Naves", "San Miguel")
-prov3 = ("Azogues", "Biblián", "Cañar", "Déleg", "El Tambo", "La Troncal")
-prov4 = ("Bolívar", "Espejo", "Mira", "Montúfar", "Tulcán")
-prov5 = ("Alausí", "Chambo", "Chunchi", "Colta", "Cumandá", "Guamote", "Guano", "Pallatanga", "Penipe", "Riobamba")
-prov6 = ("La Maná", "Latacunga", "Pangua", "Pujilí", "Salcedo", "Saquisilí", "Sigchos")
-prov7 = (
-    "Arenillas", "Atahualpa", "Balsas", "Chilla", "El Guabo", "Huaquillas", "Isla Correa", "Isla Matapalo", "Las Lajas",
-    "Machala", "Marcabelí", "Pasaje", "Piñas", "Portovelo", "Santa", "Rosa", "Zaruma")
-prov8 = ("Atacames", "La Concordia", "Eloy Alfaro", "Esmeraldas", "Muisne", "Quinindé", "Río Verde", "San Lorenzo")
-prov9 = ("Isabela", "San Cristóbal", "Santa Cruz")
-prov10 = (
-    "Alfredo Baquerizo Moreno (Jujan)", "Balao", "Balzar", "Bucay", "Colimes", "Coronel Marcelino Mariduena", "Cumanda",
-    "Daule", "Eloy Alfaro (Durán)", "El Empalme", "El Triunfo", "General Antonio Elizalde", "Guayaquil", "Isidro Ayora",
-    "Lomas de Sargentillo", "Milagro (Durán)", "Naranjal", "Naranjito", "Narcisa de Jesús (Nobol)", "Palestina",
-    "Pedro Carbo", "Playas (Durán)", "General Villamil Playas", "Samborondón", "Salitre (Durán)",
-    "San Jacinto de Yaguachi", "Santa Lucía (Durán)", "Simón Bolívar (Durán)", "Urbina Jado",
-    "San Jacinto de Yaguachi", "Troncal (Durán)")
-prov11 = ("Antonio Ante", "Cotacachi", "Ibarra", "Otavalo", "Pimampiro", "San Miguel de Urcuquí")
-prov12 = (
-    "Calvas", "Catamayo Canton", "Celica", "Chaguarpamba", "Espíndola", "Gonzanamá", "Loja", "Macará", "Paltas",
-    "Pindal",
-    "Puyango", "Quilanga", "Saraguro", "Sozoranga", "Zapotillo")
-prov13 = (
-    "Baba", "Babahoyo", "Buena Fe", "Mocache", "Montalvo", "Palenque", "Pueblo Viejo", "Quevedo", "Urdaneta",
-    "Ventanas",
-    "Vinces")
-prov14 = ("Bolívar (Ecuador)", "Chone", "El Carmen (Ecuador)", "Flavio Alfaro", "Jama", "Jaramijó", "Jipijapa", "Junín",
-          "Manta (Ecuador)", "Montecristi (Ecuador)", "Olmedo (Ecuador)", "Paján", "Pedernales", "Pichincha",
-          "Portoviejo",
-          "Puerto Lopéz", "Rocafuerte", "San Vicente", "Santa Ana (Ecuador)", "Sucre (Ecuador)",
-          "Tosagua", "Veinticuatro de Mayo")
-prov15 = ("Gualaquiza", "Huamboya", "Limón Indanza", "Logroño (Ecuador)", "Morona", "Pablo Sexto", "Palora",
-          "San Juan Bosco (Ecuador)", "Santiago (Ecuador)", "Sucúa", "Taisha", "Tiwinza")
-prov16 = ("Archidona", "Carlos Luis Arosemena Tola", "El Chaco", "Quijos", "Tena")
-prov17 = ("Aguarico", "Francisco de Orellana", "Joya de los Sachas", "Loreto")
-prov18 = ("Arajuno", "Mera", "Pastaza", "Santa Clara (Ecuador)")
-prov19 = ("Cayambe", "Mejía", "Pedro Moncayo", "Pedro Vicente Maldonado", "Puerto Quito", "Quito", "Rumiñahui",
-          "San Miguel de los Bancos")
-prov20 = ("La Libertad (Ecuador)", "Salinas (Ecuador)", "Santa Elena (Ecuador)")
-prov21 = "Santo Domingo de los Colorados"
-prov22 = ("Cascales", "Cuyabeno", "Gonzalo Pizarro", "Lago Agrio", "Putumayo", "Shushufindi", "Sucumbios")
-prov23 = ("Ambato", "Baños (Ecuador)", "Cevallos", "Mocha", "Patate", "Pelileo")
-prov24 = ("Centinela del Cóndor", "Chinchipe", "El Pangui", "Palanda", "Paquisha", "Nangaritza", "Yacuambi", "Yantzaza",
-          "Zamora (Ecuador)")
-
-ciudades = {
-    provincias[1]: prov1,
-    provincias[2]: prov2,
-    provincias[3]: prov3,
-    provincias[4]: prov4,
-    provincias[5]: prov5,
-    provincias[6]: prov6,
-    provincias[7]: prov7,
-    provincias[8]: prov8,
-    provincias[9]: prov9,
-    provincias[10]: prov10,
-    provincias[11]: prov11,
-    provincias[12]: prov12,
-    provincias[13]: prov13,
-    provincias[14]: prov14,
-    provincias[15]: prov15,
-    provincias[16]: prov16,
-    provincias[17]: prov17,
-    provincias[18]: prov18,
-    provincias[19]: prov19,
-    provincias[20]: prov20,
-    provincias[21]: prov21,
-    provincias[22]: prov22,
-    provincias[23]: prov23,
-    provincias[24]: prov24
-}

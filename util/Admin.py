@@ -1,6 +1,5 @@
 class Admin:
-    def __init__(self, nombre, nombre_usuario,correo_ad):
-
+    def __init__(self, nombre, nombre_usuario, correo_ad):
         self.__nombre = nombre
         self.__nombre_usuario = nombre_usuario
         self.__correo_ad = correo_ad
@@ -15,7 +14,7 @@ class Admin:
         return self.__nombre_usuario
 
     def set_correo_a(self, correo_a):
-        self.__correo_ad=correo_a
+        self.__correo_ad = correo_a
 
     def set_nombre_a(self, nombre):
         self.__nombre = nombre

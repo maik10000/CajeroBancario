@@ -7,21 +7,10 @@ class Cajero:
         self.__bd_del_cajero = DBCajero()
 
 
-    def registrar_usuario(self, nombre,cedula,clave,saldo,correo,numero_celular,numero_cuenta,ciudad,provincia):
+    def registrar_usuario(self, nombre,cedula,clave,saldo,correo,numero_celular,numero_cuenta,ciudad):
         self.__bd_del_cajero.abrir_conexion()
-        self.__bd_del_cajero.insertar_datos({'apunta': 'usuario', 'valores': (numero_cuenta, nombre, cedula, numero_celular, saldo, correo, clave, self.verificar_ciudad(ciudad, provincia)[0][0])})
+        self.__bd_del_cajero.insertar_datos({'apunta': 'usuario', 'valores': (numero_cuenta, nombre, cedula, numero_celular, saldo, correo, clave, ciudad)})
         self.__bd_del_cajero.cerrar_conexion()
-
-
-    def verificar_ciudad(self,ciudad,prov):
-        self.__bd_del_cajero.abrir_conexion()
-        #verifica si la ciudad ya existe
-        if (len(self.__bd_del_cajero.buscar_datos({'apunta': 'ciudad', 'valores': (ciudad,)})) == 0):
-            #sino existe inserta la ciodad y la provincia en la que esta
-            respuesta = self.__bd_del_cajero.buscar_datos({'apunta': 'provincia', 'valores': (prov,)})
-            self.__bd_del_cajero.insertar_datos({'apunta': 'ciudad', 'valores': (ciudad, respuesta[0][0])})
-        #retorna la ciudad
-        return self.__bd_del_cajero.buscar_datos({'apunta': 'ciudad', 'valores': (ciudad,)})
 
 
     def cargar_usuario(self, cuenta, passwd):
@@ -87,12 +76,13 @@ class Cajero:
         data = {'apunta': 'depositar', 'valores': (monto, cuenta_beneficiaria)}
         self.__bd_del_cajero.procesar_transaccion(data)
         self.__bd_del_cajero.cerrar_conexion()
+        return {'estate': 'Transaccion exitosa'}
 
     def transferir(self, cuenta_beneficieria, cuenta_benefactor, monto):
         self.__bd_del_cajero.abrir_conexion()
         data = {'apunta': 'transferencia', 'valores': (cuenta_benefactor,)}
         res = self.__bd_del_cajero.buscar_datos(data)
-        if float(res[0][0]) > float(monto):
+        if float(res[0][0]) > monto:
             data = {'apunta': 'transferencia', 'valores': (cuenta_beneficieria, cuenta_benefactor, monto)}
             self.__bd_del_cajero.procesar_transaccion(data)
             self.__bd_del_cajero.cerrar_conexion()
@@ -106,14 +96,14 @@ class Cajero:
         data = {'apunta': 'transferencia', 'valores': (cuenta_benefactor,)}
         res = self.__bd_del_cajero.buscar_datos(data)
 
-        if float(res[0][0]) > monto:
+        if int(res[0][0]) > monto:
             data = {'apunta': 'retiro', 'valores': (cuenta_benefactor, monto)}
             self.__bd_del_cajero.procesar_transaccion(data)
             self.__bd_del_cajero.cerrar_conexion()
-            return {'estate': 'Transaccion exitosa'}
+            return {'estate': 'Transaccion exitosa','std':True}
 
         self.__bd_del_cajero.cerrar_conexion()
-        return {'estate': 'Saldo insuficiente'}
+        return {'estate': 'Saldo insuficiente','std':False}
 
     def bloquearUsuario(self,cuenta):
         self.__bd_del_cajero.abrir_conexion()
@@ -121,9 +111,13 @@ class Cajero:
         self.__bd_del_cajero.penalizar(data)
         self.__bd_del_cajero.cerrar_conexion()
 
-    def usuario_bloqueado(self,cuenta):
+    def usuario_bloqueado(self,cuenta,rol):
         self.__bd_del_cajero.abrir_conexion()
-        data = {'apunta': 'validar_usuario', 'valores': (cuenta,)}
+        if rol == 'user':
+            data = {'apunta': 'validar_usuario', 'valores': (cuenta,)}
+        else:
+            data = {'apunta': 'validar_admin', 'valores': (cuenta,)}
+
         res = self.__bd_del_cajero.buscar_datos(data)
         self.__bd_del_cajero.cerrar_conexion()
         if len(res) != 0:
@@ -131,6 +125,24 @@ class Cajero:
         else:
             return [('False',1)]
 
-    def editar_usuario(self):
-        pass
+    def prov_ciudades(self):
+        self.__bd_del_cajero.abrir_conexion()
+        prov = self.__bd_del_cajero.cargar_provincias()
+        ciu = self.__bd_del_cajero.cargar_ciudades()
+        self.__bd_del_cajero.cerrar_conexion()
+        p =['Seleccione una Provincia']
+        for i in prov:
+            p.append(i[1])
+        return {'provincia':p,'ciudad':ciu}
+
+
+
+    def editar_pass(self, c1, c2,id):
+        self.__bd_del_cajero.abrir_conexion()
+        res = self.__bd_del_cajero.val_pass(c2,id)
+        if res[0]:
+            self.__bd_del_cajero.cambiar_pass(c1,id)
+            return {'msj':'Cambios guardados correctamente','state':True}
+        else:
+            return {'msj':'Contraseña incorrecta','state':False}
 

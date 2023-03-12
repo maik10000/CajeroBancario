@@ -5,7 +5,7 @@ rutas_de_comandos_sql = {
         'insertar': "INSERT INTO usuario (NCuenta,Nombre_Apellido,cedula,telefono,saldo,correo,clave,index_ciudad) "
                     "VALUES(%s,%s,%s,%s,%s,%s,%s,%s)",
         'buscar': "CALL vaSe(%s,%s)",
-        'banear': 'CALL penalizar(%s)',
+        'banear': 'CALL strk(%s)',
         'actualizar': "CALL acU(%s,%s,%s,%s,%s,%s)"
     },
     'ciudad': {
@@ -56,11 +56,9 @@ class DBCajero:
         self.__db_nombre = 'u846314360_DBBancodillera'
         self.__conexion = None
 
-
     def abrir_conexion(self):
         self.__conexion = MySQLdb.connect(host=self.__host, user=self.__bd_usuario, passwd=self.__pass,
                                           port=self.__port, database=self.__db_nombre)
-
 
     def insertar_datos(self, data):
         puntero = self.__conexion.cursor()
@@ -69,13 +67,11 @@ class DBCajero:
         self.__conexion.commit()
 
     def buscar_datos(self, data):
-
         puntero = self.__conexion.cursor()
         comand_sql = rutas_de_comandos_sql[data['apunta']]['buscar']
-        puntero.execute(comand_sql,data['valores'])
+        puntero.execute(comand_sql, data['valores'])
         dat = puntero.fetchall()
         return dat
-
 
     def procesar_transaccion(self, data):
         puntero = self.__conexion.cursor()
@@ -86,21 +82,54 @@ class DBCajero:
     def cerrar_conexion(self):
         self.__conexion.close()
 
-    def get_lista_usuarios(self,comando,cuenta):
+    def get_lista_usuarios(self, comando, cuenta):
         puntero = self.__conexion.cursor()
         puntero.execute(comando, (cuenta,))
         return puntero.fetchall()
 
-    def penalizar(self,data):
+    def penalizar(self, data):
         puntero = self.__conexion.cursor()
         comand_sql = rutas_de_comandos_sql[data['apunta']]['banear']
-        puntero.execute(comand_sql,data['valores'])
+        puntero.execute(comand_sql, data['valores'])
         self.__conexion.commit()
 
-
-    def actualiza_usuario(self,data):
+    def actualiza_usuario(self, data):
         puntero = self.__conexion.cursor()
         comand_sql = rutas_de_comandos_sql[data['apunta']]['actualizar']
         puntero.execute(comand_sql, data['valores'])
         self.__conexion.commit()
 
+    def cargar_provincias(self):
+        puntero = self.__conexion.cursor()
+        comand_sql = 'SELECT * FROM provicia '
+        puntero.execute(comand_sql)
+        dat = puntero.fetchall()
+        return dat
+
+    def cargar_ciudades(self):
+        puntero = self.__conexion.cursor()
+        comand_sql = 'SELECT * FROM ciudad'
+        puntero.execute(comand_sql)
+        dat = puntero.fetchall()
+        return dat
+
+    def val_pass(self, clave, id):
+        puntero = self.__conexion.cursor()
+        puntero.execute(f'SELECT true  FROM usuario  WHERE cedula ={id}  AND clave = {clave}')
+        res = puntero.fetchall()
+        if len(res) == 0:
+            return [False]
+        else:
+            return res
+
+    def cambiar_pass(self, clave, id):
+        puntero = self.__conexion.cursor()
+        comand_sql = f'UPDATE usuario SET clave = {clave} WHERE usuario.cedula = {id}'
+        puntero.execute(comand_sql)
+        self.__conexion.commit()
+
+    def eliminar_usuario(self, id):
+        puntero = self.__conexion.cursor()
+        comand_sql = f'DELETE FROM `usuario` WHERE `usuario`.`ID_USUARIO` = {id}'
+        puntero.execute(comand_sql)
+        self.__conexion.commit()

@@ -10,7 +10,8 @@ from DataBase.bdCajero import DBCajero
 
 color = color_sistema()
 MONTO_INICIAL = 10
-list_head = ('NCuenta', 'Nombre', 'Cedula', 'Celular', 'Correo', 'Ciudad', 'Provincia', 'Saldo-Efectivo', 'Contraseña')
+list_head = ('NCuenta', 'Nombre', 'Cedula', 'Celular', 'Correo', 'Ciudad', 'Provincia', 'Saldo-Efectivo', 'Contraseña',
+             'strike')
 
 
 class VentanaPerfilAdmin(tk.Tk):
@@ -43,21 +44,27 @@ class VentanaPerfilAdmin(tk.Tk):
         label = tk.Label(self, text='Administrador', bg=color.BLANCO, font=font_style2)
         label.place(x=490, y=30)
 
-        label = tk.Label(self, text=self.info.get_nombre_a(), font=font_style3, bg=color.BLANCO,
+        label = tk.Label(self, text='Admin: '+'self.info.get_nombre_a()', font=font_style3, bg=color.BLANCO,
                          foreground=color.GRIS_B6)
         label.place(x=50, y=100)
 
         btn_registrar = ttk.Button(self, text='Registrar', command=self.abrir_ventana_registro)
         btn_registrar.place(x=205, y=160)
 
-        btn_eliminar = ttk.Button(self, text='Eliminar')
+        btn_eliminar = ttk.Button(self, text='Eliminar', command=self.eliminar_usuario)
         btn_eliminar.place(x=441, y=160)
 
-        btn_buscar = ttk.Button(self, text='Buscar')
-        btn_buscar.place(x=677, y=160)
-
+        btn_buscar = ttk.Button(self, text='Buscar',command=self.buscar_usuario)
+        btn_buscar.place(x=130, y=600)
+        btn_int_b = ttk.Entry(self)
+        btn_int_b.place(x=250,y=600,height=35,width=200)
         btn_editar = ttk.Button(self, text='Editar')
         btn_editar.place(x=913, y=160)
+
+        db = DBCajero()
+        db.abrir_conexion()
+        self.res = db.get_lista_usuarios('CALL uList(%s)', 'maoaAdmin')
+        db.cerrar_conexion()
 
         self.lista_usuarios()
 
@@ -65,33 +72,30 @@ class VentanaPerfilAdmin(tk.Tk):
         btn_salir.place(x=944, y=655)
 
     def lista_usuarios(self):
+        w = 1000
+        h = 250
         frame = tk.Frame(self)
-        frame.place(x=130, y=220, width=1010, height=420)
+        frame.place(x=130, y=220, width=w, height=h)
 
-        scroll_x = ttk.Scrollbar(frame, orient='horizontal')
-        scroll_x.pack(side='bottom', fill='x')
-        scroll_y = ttk.Scrollbar(frame)
-        scroll_y.pack(side='right', fill='y')
-
-        self.__lista_usuarios = ttk.Treeview(frame, columns=list_head,
-                                             xscrollcommand=scroll_x.set, yscrollcommand=scroll_y.set)
-
+        self.__lista_usuarios = ttk.Treeview(frame, columns=list_head)
         self.__lista_usuarios.heading('0', text='ID', anchor='center')
 
         for i in list_head:
             self.__lista_usuarios.heading(i, text=i, anchor='center')
 
-        db = DBCajero()
-        db.abrir_conexion()
-        res = db.get_lista_usuarios('CALL uList(%s)', self.info.get_nombre_usuario())
-        db.cerrar_conexion()
-        for i in res:
+        for i in self.res:
             self.__lista_usuarios.insert('', 'end', text=i[0],
-                                         values=(i[1], i[2], i[3], i[4], i[6], i[9], i[10], i[5], i[7]))
+                                         values=(i[1], i[2], i[3], i[4], i[5], i[6], i[7], i[8], i[9],i[10]))
 
-        self.__lista_usuarios.place(x=0, y=0, width=1010, height=403)
-        scroll_x.config(command=self.__lista_usuarios.xview)
-        scroll_y.config(command=self.__lista_usuarios.yview)
+        self.__lista_usuarios.place(x=0, y=0,height=h,width=w)
+
+        scrollbar_x = ttk.Scrollbar(self.__lista_usuarios,orient='horizontal',command=self.__lista_usuarios.xview)
+        self.__lista_usuarios.config(xscrollcommand=scrollbar_x.set)
+        scrollbar_x.pack(side='bottom',fill='x')
+
+        scrollbar_y = ttk.Scrollbar(self.__lista_usuarios, orient='vertical', command=self.__lista_usuarios.yview)
+        self.__lista_usuarios.config(yscrollcommand=scrollbar_y.set)
+        scrollbar_y.pack(side='right', fill='y')
 
     def actualizar(self):
         self.limpiar_lista()
@@ -103,21 +107,20 @@ class VentanaPerfilAdmin(tk.Tk):
     def mostrar_aviso_confirmacion(self):
         self.aviso = tk.Label(self, text="Usuario Registrado con exito!", foreground=color.VERDE_00, bg=color.VERDE_4C,
                               font=("Cascadia Code", 12))
+        self.aviso.place(x=0, y=0, width=300, height=40)
         btn_cerrar = tk.Label(self.aviso, text="X", foreground=color.VERDE_00, bg=color.VERDE_4C,
                               font=("Cascadia Code", 10))
         btn_cerrar.place(x=280, y=-1, width=20, height=20)
         btn_cerrar.bind('<Button-1>', self.cerrar_ventana_aviso)
-        self.aviso.place(x=0, y=0, width=300, height=40)
 
-    def cerrar_ventana_aviso(self, evento):
+    def cerrar_ventana_aviso(self):
         self.aviso.destroy()
 
-    def registrar_usuario(self, nombre, cedula, clave, correo, telefono, ciudad, provicia):
-        print("Usuario Registrado con exito!")
+    def registrar_usuario(self, nombre, cedula, clave, correo, telefono, ciudad):
         cj = Cajero()
 
         cj.registrar_usuario(nombre, cedula, clave, MONTO_INICIAL, correo, telefono,
-                             self.generar_cuenta(cedula, telefono), ciudad, provicia)
+                             self.generar_cuenta(cedula, telefono), ciudad)
         self.mostrar_aviso_confirmacion()
 
     def generar_cuenta(self, cedula, telefono):
@@ -137,3 +140,33 @@ class VentanaPerfilAdmin(tk.Tk):
         self.destroy()
         ventana_inicio = venI.VentanaInicio()
         ventana_inicio.mainloop()
+
+    def eliminar_usuario(self):
+        s = self.__lista_usuarios.focus()
+        s = self.__lista_usuarios.item(s)
+        if s['text'] != '':
+            d = s['text']
+            db = DBCajero()
+            db.abrir_conexion()
+            db.eliminar_usuario(d)
+            db.cerrar_conexion()
+            self.actualizar()
+            print('Usuario eliminado con exito')
+        else:
+            print('Seleccione un usuario primero!')
+
+    def buscar_usuario(self,valor='Al'):
+        s = self.res
+        for u in s:
+            if valor in u:
+                s = u
+                break
+        else:
+            print(f'No se enconrto "{valor}"')
+        print(self.__lista_usuarios['values'])
+
+    def destroy(self):
+        return super().destroy()
+
+# v = VentanaPerfilAdmin()
+# v.mainloop()
