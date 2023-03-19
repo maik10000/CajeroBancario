@@ -2,16 +2,20 @@ import tkinter as tk
 import tkinter.font as tk_font
 import tkinter.ttk as ttk
 from estilos.colores import color_sistema
+from DataBase.bdCajero import DBCajero
 color = color_sistema()
 
 
 class VentanaMovimientos(tk.Toplevel):
-
-    def __init__(self, *args, **kwargs):
+    en_uso = False
+    def __init__(self, *args, ide='', **kwargs):
         super().__init__(*args, **kwargs)
+        self.ide = ide
         self.componentes()
 
+
     def componentes(self):
+        self.__class__.en_uso = True
         ancho_pantalla = self.winfo_screenwidth()
         altura_pantalla = self.winfo_screenheight()
         x = (ancho_pantalla // 2) - (1000 // 2)
@@ -42,11 +46,39 @@ class VentanaMovimientos(tk.Toplevel):
         ttk.Style().configure('pad.TButton', foreground=color.BLANCO, background=color.VERDE_3D,
                               bordercolor=color.GRIS_DD, font=("Cascadia Code", 15))
         self.lista_movimientos = tk.Listbox(self, selectmode=tk.EXTENDED)
-        self.lista_movimientos.config(font=("Cascadia Code", 25))
+        self.lista_movimientos.config(font=("Cascadia Code", 15))
         self.lista_movimientos.place(x=150, y=150, width=700, height=400)
         self.lista_movimientos.insert(
-            0, *('a', 'b', 'c', 'b', 'c', 'b', 'c', 'b', 'c', 'b', 'c', 'b', 'c', 'b', 'c'))
+            0, *self.consultar_mov())
 
 
-#v = VentanaMovimientos()
-#v.mainloop()
+    def consultar_mov(self):
+        nov_data  = []
+        db_mov = DBCajero()
+        db_mov.abrir_conexion()
+        res = db_mov.get_lista_mov(f'SELECT Id, lugar, fecha, id_t, total FROM reg_mov WHERE id_bene ={self.ide}')
+        db_mov.cerrar_conexion()
+        
+        if len(res) != 0:
+            for d in res:
+                
+                nov_data.append(f"""  Nº: 000{d[0]}    Lugar: {d[1]}         Fecha: {d[2]}       {self.c_g(d[3],d[4])}""")
+
+            return nov_data
+        
+        else:
+
+            return ('No hay movinientos',)
+
+    def c_g(self,id,nom):
+        if id == 1: 
+
+            return f'Retiro          - {nom}' 
+        
+        else: 
+
+            return f'Deposito     + {nom}'
+        
+    def destroy(self):
+        self.__class__.en_uso = False
+        return super().destroy()

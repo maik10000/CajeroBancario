@@ -138,7 +138,7 @@ class VentanaDepositoTransferencia(tk.Toplevel):
                     if 10 < c < 500:
                         return {'state': True, 'msj': 'Valido', 'val': c}
                     else:
-                        return {'state': False, 'msj': 'El monto tiene que ser de 10 hasta 15.000'}
+                        return {'state': False, 'msj': 'El monto tiene que ser de 10 hasta 500'}
                 else:
                     return {'state': False, 'msj': 'Sistema solo puede procesar cantidades multiplos de 5'}
 

@@ -86,6 +86,11 @@ class DBCajero:
         puntero = self.__conexion.cursor()
         puntero.execute(comando, (cuenta,))
         return puntero.fetchall()
+    
+    def get_lista_mov(self, comando):
+        puntero = self.__conexion.cursor()
+        puntero.execute(comando)
+        return puntero.fetchall()
 
     def penalizar(self, data):
         puntero = self.__conexion.cursor()

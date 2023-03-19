@@ -100,10 +100,15 @@ class VentanaRetiro(tk.Toplevel):
         boton_cancelar.place(x=550, y=603, width=150, height=40)
 
     def retirar_cantidades(self, cant=0):
+
         res = Cajero().retirar_dinero(self.numero_cuenta, cant)
-        self.mensaje(res['estate'], clor=color.VERDE_40)
-        Cajero().registrar_movimiento(id_b=self.ide,total=c,tip='1',fecha=time.strftime("%Y-%m-%d"))
-        self.actualizar(cant)
+
+        if res['std']:
+            Cajero().registrar_movimiento(id_b=self.ide,total=cant,tip='1',fecha=time.strftime("%Y-%m-%d"))
+            self.mensaje(res['estate'], clor=color.VERDE_40)
+            self.actualizar(cant)
+        else:
+            self.mensaje(res['estate'], clor=color.ROJO_1A)
 
     def retirar(self):
         c = self.cantidad.get()

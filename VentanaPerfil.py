@@ -5,6 +5,7 @@ from PIL import ImageTk, Image
 from VentanaDepositoTransferencia import VentanaDepositoTransferencia
 from VentanaAjustes import VentanaAjustes
 from VentanaRetiro import VentanaRetiro
+from VentanaMovimientos import VentanaMovimientos
 import VentanaInicio as venI
 from estilos.colores import color_sistema
 
@@ -17,7 +18,6 @@ class VentanaPerfil(tk.Tk):
 
     def __init__(self, *args, info_user=None, **kwargs):
         super().__init__(*args, **kwargs)
-
         self.info_usuario = info_user
 
         # font style
@@ -156,7 +156,8 @@ class VentanaPerfil(tk.Tk):
                                          actualizar=self.actualizacion_retiro, mood='Transferencia')
 
     def ver_movimientos(self):
-        print("lista Movimientos")
+        if not VentanaMovimientos.en_uso:
+            VentanaMovimientos(ide=self.info_usuario.get_id())
 
     def salir(self):
         self.destroy()
