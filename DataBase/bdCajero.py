@@ -18,7 +18,7 @@ rutas_de_comandos_sql = {
     },
 
     'cuentas': {
-        'buscar': 'SELECT Nombre_Apellido, correo FROM usuario WHERE NCuenta = %s'
+        'buscar': 'SELECT Nombre_Apellido, correo, ID_USUARIO FROM usuario WHERE NCuenta = %s'
     },
 
     'depositar': {
@@ -129,7 +129,21 @@ class DBCajero:
         self.__conexion.commit()
 
     def eliminar_usuario(self, id):
+            puntero = self.__conexion.cursor()
+            comand_sql = f'DELETE FROM `usuario` WHERE `usuario`.`ID_USUARIO` = {id}'
+            puntero.execute(comand_sql)
+            self.__conexion.commit()
+
+    #INSERT INTO `reg_mov` (`Id`, `total`, `id_bene`, `id_factor`, `lugar`, `cant_ant`, `can_pos`, `id_t`, `fecha`) VALUES ('15', '15', '15', lugar, '30', '15', '2', '1999-09-15');
+    def generar_registro(self,data):
         puntero = self.__conexion.cursor()
-        comand_sql = f'DELETE FROM `usuario` WHERE `usuario`.`ID_USUARIO` = {id}'
-        puntero.execute(comand_sql)
+        comand_sql = "INSERT INTO reg_mov (id_bene,id_factor, lugar, id_t,fecha,total) VALUES (%s,%s,%s,%s,%s,%s)"
+        puntero.execute(comand_sql, data)
         self.__conexion.commit()
+
+
+#data =('15',None,'bc','2','2023-03-18',300)
+#c = DBCajero()
+#c.abrir_conexion()
+#c.generar_registro(data)
+#c.cerrar_conexion()

@@ -21,9 +21,12 @@ class VentanaPerfil(tk.Tk):
         self.info_usuario = info_user
 
         # font style
-        self.fontStyle = tk_font.Font(family="Cascadia Code", size=25, slant="italic", weight="bold")
-        self.fontStyle2 = tk_font.Font(family="Cascadia Code", size=30, slant="italic", weight="bold")
-        self.fontStyle3 = tk_font.Font(family="Cascadia Code", size=20, slant="italic", weight="bold")
+        self.fontStyle = tk_font.Font(
+            family="Cascadia Code", size=25, slant="italic", weight="bold")
+        self.fontStyle2 = tk_font.Font(
+            family="Cascadia Code", size=30, slant="italic", weight="bold")
+        self.fontStyle3 = tk_font.Font(
+            family="Cascadia Code", size=20, slant="italic", weight="bold")
         self.componentes()
 
     def componentes(self):
@@ -77,55 +80,71 @@ class VentanaPerfil(tk.Tk):
 
         ttk.Style().theme_use('clam')
         ttk.Style().configure('pad.TButton', background=color.AZUL_75, bordercolor=color.VERDE_3D)
-        ttk.Style().configure('pad2.TButton', background=color.AMARILLO_33, bordercolor=color.BLANCO_EE)
+        ttk.Style().configure('pad2.TButton', background=color.AMARILLO_33,
+                              bordercolor=color.BLANCO_EE)
         ttk.Style().configure('pad3.TButton', foreground=color.BLANCO, background=color.AMARILLO_3E,
                               bordercolor=color.BLANCO_EE, font=("Cascadia Code", 16))
-        ttk.Style().map('pad.TButton', background=[('pressed', color.VERDE_30), ('active', color.VERDE_3B)])
-        ttk.Style().map('pad2.TButton', background=[('pressed', color.AMARILLO_21), ('active', color.AMARILLO_30)])
-        ttk.Style().map('pad3.TButton', background=[('pressed', color.AMARILLO_2F), ('active', color.AMARILLO_39)])
+        ttk.Style().map('pad.TButton', background=[
+            ('pressed', color.VERDE_30), ('active', color.VERDE_3B)])
+        ttk.Style().map('pad2.TButton', background=[
+            ('pressed', color.AMARILLO_21), ('active', color.AMARILLO_30)])
+        ttk.Style().map('pad3.TButton', background=[
+            ('pressed', color.AMARILLO_2F), ('active', color.AMARILLO_39)])
 
-        boton_deposito = ttk.Button(self, style="pad.TButton", image=icono1, command=self.depositar)
+        boton_deposito = ttk.Button(
+            self, style="pad.TButton", image=icono1, command=self.depositar)
         boton_deposito.imagen = icono1
-        boton_retiro = ttk.Button(self, style="pad.TButton", image=icono2, command=self.retirar)
+        boton_retiro = ttk.Button(
+            self, style="pad.TButton", image=icono2, command=self.retirar)
         boton_retiro.image = icono2
-        boton_ajustes = ttk.Button(self, style="pad2.TButton", image=icono3, command=self.ajustar_usuario)
+        boton_ajustes = ttk.Button(
+            self, style="pad2.TButton", image=icono3, command=self.ajustar_usuario)
         boton_ajustes.image = icono3
-        boton_transferencia = ttk.Button(self, style="pad.TButton", image=icono4, command=self.transferir)
-        boton_transferencia.image = icono4
-        boton_movimientos = ttk.Button(self, style="pad.TButton", image=icono5, command=self.ver_movimientos)
+        # boton_transferencia = ttk.Button(self, style="pad.TButton", image=icono4, command=self.transferir)
+        # boton_transferencia.image = icono4
+        boton_movimientos = ttk.Button(
+            self, style="pad.TButton", image=icono5, command=self.ver_movimientos)
         boton_movimientos.image = icono5
 
-        botonSalir = ttk.Button(self, style="pad3.TButton", text="SALIR", command=self.salir)
+        botonSalir = ttk.Button(
+            self, style="pad3.TButton", text="SALIR", command=self.salir)
 
-        label = tk.Label(self, text="Deposito", font=self.fontStyle3, bg=color.BLANCO, foreground=color.GRIS_4D)
+        label = tk.Label(self, text="Deposito", font=self.fontStyle3,
+                         bg=color.BLANCO, foreground=color.GRIS_4D)
         label.place(x=239, y=240)
-        label = tk.Label(self, text="Retiro", font=self.fontStyle3, bg=color.BLANCO, foreground=color.GRIS_4D)
+
+        label = tk.Label(self, text="Retiro", font=self.fontStyle3,
+                         bg=color.BLANCO, foreground=color.GRIS_4D)
         label.place(x=239, y=425)
+
         label = tk.Label(self, text="Cambiar contraseña", font=self.fontStyle3, bg=color.BLANCO,
                          foreground=color.GRIS_4D)
         label.place(x=239, y=597)
-        label = tk.Label(self, text="Transferencias", font=self.fontStyle3, bg=color.BLANCO,
-                         foreground=color.GRIS_4D)
-        label.place(x=815, y=240)
+
         label = tk.Label(self, text="Mis Movimientos", font=self.fontStyle3, bg=color.BLANCO,
                          foreground=color.GRIS_4D)
-        label.place(x=815, y=425)
+        label.place(x=815, y=240)
+
+        # label = tk.Label(self, text="Mis Movimientos", font=self.fontStyle3, bg=color.BLANCO,
+        #                 foreground=color.GRIS_4D)
+        # label.place(x=815, y=425)
 
         boton_deposito.place(x=60, y=210, width=100, height=100)
         boton_retiro.place(x=60, y=400, width=100, height=100)
         boton_ajustes.place(x=60, y=575, width=100, height=100)
-        boton_transferencia.place(x=635, y=210, width=100, height=100)
-        boton_movimientos.place(x=635, y=400, width=100, height=100)
+        # boton_transferencia.place(x=635, y=210, width=100, height=100)
+        boton_movimientos.place(x=635, y=240, width=100, height=100)
         botonSalir.place(x=956, y=620, width=172, height=45)
 
     def depositar(self):
         if not VentanaDepositoTransferencia.en_uso:
-            VentanaDepositoTransferencia(num_cuenta=self.info_usuario.get_numero_cuenta(),
+            VentanaDepositoTransferencia(num_cuenta=self.info_usuario.get_numero_cuenta(), ide=self.info_usuario.get_id(),
                                          actualizar=self.actualizar_depositos, mood='Depositar')
 
     def retirar(self):
         if not VentanaRetiro.en_uso:
-            VentanaRetiro(numero_cuenta=self.info_usuario.get_numero_cuenta(), actualizar=self.actualizacion_retiro)
+            VentanaRetiro(numero_cuenta=self.info_usuario.get_numero_cuenta(
+            ), ide=self.info_usuario.get_id(), actualizar=self.actualizacion_retiro)
 
     def ajustar_usuario(self):
         if not VentanaAjustes.en_uso:
@@ -153,4 +172,3 @@ class VentanaPerfil(tk.Tk):
         v = self.info_usuario.get_saldo() + value
         self.info_usuario.set_saldo(v)
         self.label_price['text'] = v
-

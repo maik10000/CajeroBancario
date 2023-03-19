@@ -19,9 +19,9 @@ class Cajero:
         credenciales = {'apunta': 'usuario', 'valores': (cuenta, passwd)}
         res = self.__bd_del_cajero.buscar_datos(credenciales)
         self.__bd_del_cajero.cerrar_conexion()
-
+        # print(res)
         if len(res) != 0:
-            dataUser = Usuario(res[0][1], res[0][2], res[0][4], res[0][5], res[0][3], res[0][0], res[0][6], res[0][7])
+            dataUser = Usuario(res[0][1], res[0][2], res[0][4], res[0][5], res[0][3], res[0][0], res[0][6], res[0][7],res[0][8])
             data = {'estado': True, 'userInfo': dataUser}
             return data
 
@@ -29,7 +29,7 @@ class Cajero:
         credenciales = {'apunta': 'admins', 'valores': (cuenta, passwd)}
         res = self.__bd_del_cajero.buscar_datos(credenciales)
         self.__bd_del_cajero.cerrar_conexion()
-        print(res)
+        # print(res)
         if len(res) != 0:
             dataUset = Admin(res[0][0], res[0][1], res[0][2])
             data = {'estado': True, 'userInfo': dataUset}
@@ -86,10 +86,10 @@ class Cajero:
             data = {'apunta': 'transferencia', 'valores': (cuenta_beneficieria, cuenta_benefactor, monto)}
             self.__bd_del_cajero.procesar_transaccion(data)
             self.__bd_del_cajero.cerrar_conexion()
-            return {'estate':'Transaccion exitosa'}
+            return {'estate':'Transaccion exitosa', 'std':True}
 
         self.__bd_del_cajero.cerrar_conexion()
-        return {'estate': 'Saldo insuficiente'}
+        return {'estate': 'Saldo insuficiente', 'std':False}
 
     def retirar_dinero(self, cuenta_benefactor, monto):
         self.__bd_del_cajero.abrir_conexion()
@@ -135,14 +135,20 @@ class Cajero:
             p.append(i[1])
         return {'provincia':p,'ciudad':ciu}
 
-
-
     def editar_pass(self, c1, c2,id):
         self.__bd_del_cajero.abrir_conexion()
         res = self.__bd_del_cajero.val_pass(c2,id)
+        self.__bd_del_cajero.cerrar_conexion()
         if res[0]:
             self.__bd_del_cajero.cambiar_pass(c1,id)
             return {'msj':'Cambios guardados correctamente','state':True}
         else:
             return {'msj':'Contraseña incorrecta','state':False}
+        
+        
 
+    def registrar_movimiento(self,id_b=None,id_f=None,lugar='bc',tip=None,fecha=None,total=None):
+        datos = (id_b,id_f,lugar,tip,fecha,total)
+        self.__bd_del_cajero.abrir_conexion()
+        self.__bd_del_cajero.generar_registro(datos)
+        self.__bd_del_cajero.cerrar_conexion()

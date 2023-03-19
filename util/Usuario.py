@@ -1,6 +1,7 @@
 class Usuario:
 
-    def __init__(self, nombre,cedula,saldo,correo,numero_celular,numero_cuenta,ciudad,provincia):
+    def __init__(self, nombre,cedula,saldo,correo,numero_celular,numero_cuenta,ciudad,provincia,id):
+        self.__id = id
         self.__nombre = nombre
         self.__cedula = cedula
         self.__saldo = saldo
@@ -10,6 +11,9 @@ class Usuario:
         self.__ciudad = ciudad
         self.__provincia = provincia
 
+    def get_id(self):
+        return self.__id
+    
     def get_nombre(self):
         return self.__nombre
 
