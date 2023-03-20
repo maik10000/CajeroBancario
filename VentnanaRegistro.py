@@ -148,7 +148,7 @@ class VentanaRegistro(tk.Toplevel):
                                         self.input_clave.get(),
                                         self.input_clave2)
         if respuesta[0] :
-            print(self.flag_prov)
+
             if self.flag_prov:
                 selec = self.combo_box_cuidad.current()
                 selec = self.index_cidades[0]

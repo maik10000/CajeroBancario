@@ -51,7 +51,7 @@ class VentanaPerfilAdmin(tk.Tk):
         label = tk.Label(self, text='Administrador', bg=color.BLANCO, font=font_style2)
         label.place(x=490, y=30)
 
-        label = tk.Label(self, text='Admin: '+'self.info.get_nombre_a()', font=font_style3, bg=color.BLANCO,
+        label = tk.Label(self, text='Admin: '+self.info.get_nombre_a(), font=font_style3, bg=color.BLANCO,
                          foreground=color.GRIS_B6)
         label.place(x=50, y=100)
 
@@ -135,6 +135,11 @@ class VentanaPerfilAdmin(tk.Tk):
 
     def editar_usuario(self,ide,nombre, cedula, clave, correo, telefono, ciudad):
         print(ide,nombre, cedula, clave, correo, telefono, ciudad)
+        # UPDATE usuario SET Nombre_Apellido = 'Miguel Ortega' WHERE usuario.ID_USUARIO = 3;   {nombre},{cedula},{telefono},{correo},{clave},{ide},{ciudad}
+        db = DBCajero()
+        db.abrir_conexion()
+        self.res = db.actualizar_us('CALL acU(%s,%s,%s,%s,%s,%s,%s)',(nombre,cedula,telefono,correo,clave,ide,ciudad))
+        db.cerrar_conexion()
 
 
     def generar_cuenta(self, cedula, telefono):
@@ -212,6 +217,3 @@ class VentanaPerfilAdmin(tk.Tk):
         self.mensaje_l['text'] = m
         i = (self.winfo_width() // 2) - ((len(m) * 12) // 2)
         self.mensaje_l.place(x=i, y=540)
-
-v = VentanaPerfilAdmin()
-v.mainloop()

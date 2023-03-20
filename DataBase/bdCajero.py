@@ -87,6 +87,11 @@ class DBCajero:
         puntero.execute(comando, (cuenta,))
         return puntero.fetchall()
     
+    def actualizar_us(self, comando, valores):
+        puntero = self.__conexion.cursor()
+        puntero.execute(comando, valores)
+        self.__conexion.commit()
+    
     def get_lista_mov(self, comando):
         puntero = self.__conexion.cursor()
         puntero.execute(comando)
