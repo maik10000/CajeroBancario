@@ -96,7 +96,7 @@ class VentanaRetiro(tk.Toplevel):
             self, text="Aceptar", command=self.retirar, style='btn_ret.TButton')
         boton_aceptar.place(x=230, y=603, width=150, height=40)
         boton_cancelar = ttk.Button(
-            self, text="Cancelar", style='btn_r2.TButton', command=self.cancelar)
+            self, text="Volver", style='btn_r2.TButton', command=self.cancelar)
         boton_cancelar.place(x=550, y=603, width=150, height=40)
 
     def retirar_cantidades(self, cant=0):
@@ -116,7 +116,7 @@ class VentanaRetiro(tk.Toplevel):
             try:
                 c = int(c)
                 if c % 5 == 0:
-                    if 10 < c < 500:
+                    if 5 <= c <= 500:
                         res = Cajero().retirar_dinero(self.numero_cuenta, c)
                         if res['std']:
                             Cajero().registrar_movimiento(id_b=self.ide,total=c,tip='1',fecha=time.strftime("%Y-%m-%d"))

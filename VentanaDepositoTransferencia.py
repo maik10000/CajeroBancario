@@ -135,7 +135,7 @@ class VentanaDepositoTransferencia(tk.Toplevel):
             try:
                 c = int(cant)
                 if c % 5 == 0:
-                    if 10 < c < 500:
+                    if 10 <= c <= 500:
                         return {'state': True, 'msj': 'Valido', 'val': c}
                     else:
                         return {'state': False, 'msj': 'El monto tiene que ser de 10 hasta 500'}
