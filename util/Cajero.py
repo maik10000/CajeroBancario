@@ -8,6 +8,7 @@ class Cajero:
 
 
     def registrar_usuario(self, nombre,cedula,clave,saldo,correo,numero_celular,numero_cuenta,ciudad):
+        
         self.__bd_del_cajero.abrir_conexion()
         self.__bd_del_cajero.insertar_datos({'apunta': 'usuario', 'valores': (numero_cuenta, nombre, cedula, numero_celular, saldo, correo, clave, ciudad)})
         self.__bd_del_cajero.cerrar_conexion()

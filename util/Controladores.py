@@ -1,5 +1,5 @@
 import util.Validaciones as Validaciones
-
+from util.Cajero import Cajero
 
 def controller_regsitro(nombre, cedula, celular, correo, clave1, clave2):
 
@@ -26,5 +26,6 @@ def controller_regsitro(nombre, cedula, celular, correo, clave1, clave2):
             return [False, 'Error claves no son iguales']
 
         return [False, 'Error ingrese una clave valida']
+    
 
     return [True, 'Regitro Exitoso']

@@ -124,8 +124,7 @@ class VentanaRegistro(tk.Toplevel):
 
     def registrar(self):
         # Valida todos lso campos
-        selec = self.combo_box_cuidad.current()
-        selec = self.index_cidades[selec]
+       
         respuesta = controller_regsitro(self.input_nombre.get(),
                                         self.input_cedula.get(),
                                         self.input_celular.get(),
@@ -133,16 +132,22 @@ class VentanaRegistro(tk.Toplevel):
                                         self.input_clave.get(),
                                         self.input_clave2)
         if respuesta[0]:
-
+            
             if self.flag_prov:
-                self.__callback(self.input_nombre.get(),
-                                self.input_cedula.get(),
-                                self.input_clave.get(),
-                                self.input_correo.get(),
-                                self.input_celular.get(),
-                                selec)
-                self.__callback2()
-                self.destroy()
+                selec = self.combo_box_cuidad.current()
+                selec = self.index_cidades[0]
+                res = Cajero().valida_cuentas( self.input_cedula.get())
+                if not res['estado']:
+                    self.__callback(self.input_nombre.get(),
+                                    self.input_cedula.get(),
+                                    self.input_clave.get(),
+                                    self.input_correo.get(),
+                                    self.input_celular.get(),
+                                    selec)
+                    self.__callback2()
+                    self.destroy()
+                else:
+                     self.label_aviso['text'] = 'Cedula ya registrada'
             else:
                 self.label_aviso['text'] = 'Seleccione una provincia y ciudad'
         else:

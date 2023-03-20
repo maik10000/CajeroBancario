@@ -3,7 +3,7 @@ from VentnanaRegistro import VentanaRegistro
 import tkinter.font as tk_font
 import tkinter.ttk as ttk
 from estilos.colores import color_sistema
-import VentanaInicio as venI
+import VentanaInicio
 import random
 from util.Cajero import Cajero
 from DataBase.bdCajero import DBCajero
@@ -37,8 +37,11 @@ class VentanaPerfilAdmin(tk.Tk):
         font_style2 = tk_font.Font(family="Cascadia Code", size=30, slant="italic")
 
         ttk.Style().theme_use('clam')
+        
         ttk.Style().configure('pad.TButton', foreground=color.BLANCO, background=color.VERDE_3D,
                               bordercolor=color.GRIS_DD, font=("Cascadia Code", 16))
+        ttk.Style().configure('list.Treeview', foreground=color.NEGRO,
+                              bordercolor=color.GRIS_DD, font=("Cascadia Code", 12))
         ttk.Style().map('pad.TButton', background=[('pressed', color.VERDE_30), ('active', color.VERDE_3B)])
 
         label = tk.Label(self, text='Administrador', bg=color.BLANCO, font=font_style2)
@@ -61,10 +64,7 @@ class VentanaPerfilAdmin(tk.Tk):
         btn_editar = ttk.Button(self, text='Editar')
         btn_editar.place(x=913, y=160)
 
-        db = DBCajero()
-        db.abrir_conexion()
-        self.res = db.get_lista_usuarios('CALL uList(%s)', 'maoaAdmin')
-        db.cerrar_conexion()
+        
 
         self.lista_usuarios()
 
@@ -72,12 +72,16 @@ class VentanaPerfilAdmin(tk.Tk):
         btn_salir.place(x=944, y=655)
 
     def lista_usuarios(self):
+        db = DBCajero()
+        db.abrir_conexion()
+        self.res = db.get_lista_usuarios('CALL uList(%s)', 'maoaAdmin')
+        db.cerrar_conexion()
         w = 1000
         h = 250
         frame = tk.Frame(self)
         frame.place(x=130, y=220, width=w, height=h)
 
-        self.__lista_usuarios = ttk.Treeview(frame, columns=list_head)
+        self.__lista_usuarios = ttk.Treeview(frame, columns=list_head, style='list.Treeview')
         self.__lista_usuarios.heading('0', text='ID', anchor='center')
 
         for i in list_head:
@@ -96,6 +100,7 @@ class VentanaPerfilAdmin(tk.Tk):
         scrollbar_y = ttk.Scrollbar(self.__lista_usuarios, orient='vertical', command=self.__lista_usuarios.yview)
         self.__lista_usuarios.config(yscrollcommand=scrollbar_y.set)
         scrollbar_y.pack(side='right', fill='y')
+        
 
     def actualizar(self):
         self.limpiar_lista()
@@ -113,12 +118,11 @@ class VentanaPerfilAdmin(tk.Tk):
         btn_cerrar.place(x=280, y=-1, width=20, height=20)
         btn_cerrar.bind('<Button-1>', self.cerrar_ventana_aviso)
 
-    def cerrar_ventana_aviso(self):
+    def cerrar_ventana_aviso(self,e):
         self.aviso.destroy()
 
     def registrar_usuario(self, nombre, cedula, clave, correo, telefono, ciudad):
         cj = Cajero()
-
         cj.registrar_usuario(nombre, cedula, clave, MONTO_INICIAL, correo, telefono,
                              self.generar_cuenta(cedula, telefono), ciudad)
         self.mostrar_aviso_confirmacion()
@@ -136,11 +140,17 @@ class VentanaPerfilAdmin(tk.Tk):
             self.ventana_registro = VentanaRegistro(callback=self.registrar_usuario,
                                                     callback2=self.actualizar)
 
+
+    def abrir_venta_aditar(self):
+        pass
+
     def regresar(self):
         self.destroy()
-        ventana_inicio = venI.VentanaInicio()
-        ventana_inicio.mainloop()
-
+        ven = VentanaInicio.VentanaInicio()
+        ven.mainloop()
+        
+    def editar_usuario():
+        pass
     def eliminar_usuario(self):
         s = self.__lista_usuarios.focus()
         s = self.__lista_usuarios.item(s)
@@ -168,5 +178,6 @@ class VentanaPerfilAdmin(tk.Tk):
     def destroy(self):
         return super().destroy()
 
-# v = VentanaPerfilAdmin()
-# v.mainloop()
+
+v = VentanaPerfilAdmin()
+v.mainloop()
