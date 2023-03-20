@@ -13,13 +13,15 @@ class VentanaRegistro(tk.Toplevel):
     ANCHO = 1270
     ALTO = 720
 
-    def __init__(self, *args, callback2=None, callback=None, **kwargs):
+    def __init__(self, *args, callback2=None, callback=None,info_user = None,mood='', **kwargs):
         super().__init__(*args, **kwargs)
         self.__callback = callback
         self.__callback2 = callback2
+        self.mood = mood
+        self.info_user = info_user
         self.componentes()
         self.__class__.en_uso = True
-        self.flag_prov = False
+
 
     def componentes(self):
         ancho_pantalla = self.winfo_screenwidth()
@@ -27,7 +29,7 @@ class VentanaRegistro(tk.Toplevel):
         x = (ancho_pantalla // 2) - (self.__class__.ANCHO // 2)
         y = (altura_pantalla // 2) - (self.__class__.ALTO // 2)
         self.geometry(f'{self.__class__.ANCHO}x{self.__class__.ALTO}+{x}+{y}')
-        self.title("Registro")
+        self.title(self.mood)
         self.resizable(False, False)
         self.configure(bg=color.BLANCO)
 
@@ -35,7 +37,7 @@ class VentanaRegistro(tk.Toplevel):
         font_style2 = tk_font.Font(family="Cascadia Code", size=20, slant="italic")
 
         # label titulo
-        labelT = tk.Label(self, text="Registrate", font=font_style1, bg=color.BLANCO)
+        labelT = tk.Label(self, text=self.mood, font=font_style1, bg=color.BLANCO)
         labelT.place(x=460, y=67)
         # Labels decorativos
         label = tk.Label(self, bg=color.AZUL_57).place(x=55, y=160, width=75, height=500)
@@ -61,21 +63,25 @@ class VentanaRegistro(tk.Toplevel):
         label.place(x=0, y=0)
         self.input_nombre = ttk.Entry(frame_registro, style='pad.TEntry', font=("Cascadia Code", 16))
         self.input_nombre.place(x=0, y=40, width=470, height=36)
+        self.input_nombre.insert(0,self.info_user[0])
         # cedula
         label = tk.Label(frame_registro, font=font_style2, text="Numero de CI:", foreground=color.NEGRO_44,
                          bg=color.BLANCO).place(x=0, y=100)
         self.input_cedula = ttk.Entry(frame_registro, style='pad.TEntry', font=("Cascadia Code", 16))
         self.input_cedula.place(x=0, y=140, width=470, height=36)
+        self.input_cedula.insert(0,self.info_user[1])
         # Correo
         label = tk.Label(frame_registro, font=font_style2, text="Correo:", foreground=color.NEGRO_44,
                          bg=color.BLANCO).place(x=0, y=200)
         self.input_correo = ttk.Entry(frame_registro, style='pad.TEntry', font=("Cascadia Code", 16))
         self.input_correo.place(x=0, y=240, width=470, height=36)
+        self.input_correo.insert(0,self.info_user[2])
         # Telefono
         label = tk.Label(frame_registro, font=font_style2, text="Telefono:", foreground=color.NEGRO_44,
                          bg=color.BLANCO).place(x=0, y=300)
         self.input_celular = ttk.Entry(frame_registro, style='pad.TEntry', font=("Cascadia Code", 16))
         self.input_celular.place(x=0, y=340, width=470, height=36)
+        self.input_celular.insert(0,self.info_user[3])
         # Provincias
         label = tk.Label(frame_registro, font=font_style2, text="Provicias:", foreground=color.NEGRO_44,
                          bg=color.BLANCO).place(x=0, y=400)
@@ -85,9 +91,9 @@ class VentanaRegistro(tk.Toplevel):
         res = Cajero().prov_ciudades()
         self.combo_box_prov.place(x=0, y=440, width=470, height=36)
         self.combo_box_prov['values'] = res['provincia']
-        self.combo_box_prov.current(0)
+        self.combo_box_prov.current(self.info_user[4])
         self.combo_box_prov.bind("<<ComboboxSelected>>",
-                                 lambda e, ciudad=res['ciudad']: self.cambiar_ciudades(e, ciudad))
+                                 lambda e, ciudad=res['ciudad']: self.cambiar_ciudades(event=e, ciudades=ciudad))
         # Formulario 2
         frame_registro2 = tk.Frame(self, width=430, height=472, bg=color.BLANCO)
         frame_registro2.place(x=680, y=160)
@@ -98,24 +104,34 @@ class VentanaRegistro(tk.Toplevel):
         self.combo_box_cuidad = ttk.Combobox(frame_registro2, font=("Cascadia Code", 15), style='pad.TCombobox',
                                              state="readonly")
         self.combo_box_cuidad.place(x=0, y=60, width=400, height=36)
-        self.combo_box_cuidad['values'] = ['Seleccione una cuidad']
-        self.combo_box_cuidad.current(0)
+        if self.info_user[4] != 0:
+            print('pasaa')
+            self.cambiar_ciudades(ciudades=res['ciudad'])
+        else:
+            self.combo_box_cuidad['values'] = ['Seleccione una cuidad']
+            self.flag_prov = False
+
+        self.combo_box_cuidad.current(self.info_user[5])
+
+        
+
         # Claves
         label = tk.Label(frame_registro2, font=font_style2, text="Clave de 4 digitos:", foreground=color.NEGRO_44,
                          bg=color.BLANCO)
         label.place(x=0, y=100)
         self.input_clave = ttk.Entry(frame_registro2, style='pad.TEntry', font=("Cascadia Code", 16), show="*")
         self.input_clave.place(x=0, y=160, width=300, height=36)
+        self.input_clave.insert(0,self.info_user[7])
         label = tk.Label(frame_registro2, font=font_style2, text="Confirme su clave:", foreground=color.NEGRO_44,
                          bg=color.BLANCO).place(x=0, y=200)
         self.input_clave2 = ttk.Entry(frame_registro2, style='pad.TEntry', font=("Cascadia Code", 16), show="*")
         self.input_clave2.place(x=0, y=260, width=300, height=36)
-
+        self.input_clave2.insert(0,self.info_user[7])
         self.label_aviso = tk.Label(self, text="", foreground=color.ROJO_00, bg=color.BLANCO,
                                     font=("Cascadia Code", 12))
         self.label_aviso.place(x=700, y=500)
 
-        self.boton_registrar = ttk.Button(self, text="Registrarse", style="pad.TButton", command=self.registrar)
+        self.boton_registrar = ttk.Button(self, text=self.mood, style="pad.TButton", command=self.registrar)
         self.boton_registrar.place(x=750, y=550, width=172, height=45)
 
     def destroy(self):
@@ -131,19 +147,28 @@ class VentanaRegistro(tk.Toplevel):
                                         self.input_correo.get(),
                                         self.input_clave.get(),
                                         self.input_clave2)
-        if respuesta[0]:
-            
+        if respuesta[0] :
+            print(self.flag_prov)
             if self.flag_prov:
                 selec = self.combo_box_cuidad.current()
                 selec = self.index_cidades[0]
                 res = Cajero().valida_cuentas( self.input_cedula.get())
-                if not res['estado']:
-                    self.__callback(self.input_nombre.get(),
-                                    self.input_cedula.get(),
-                                    self.input_clave.get(),
-                                    self.input_correo.get(),
-                                    self.input_celular.get(),
-                                    selec)
+                if not res['estado'] or self.mood.lower() == 'editar':
+                    if self.mood.lower() == 'registro':
+                        self.__callback(self.input_nombre.get(),
+                                        self.input_cedula.get(),
+                                        self.input_clave.get(),
+                                        self.input_correo.get(),
+                                        self.input_celular.get(),
+                                        selec)
+                    else:
+                        self.__callback(self.info_user[6],
+                                        self.input_nombre.get(),
+                                        self.input_cedula.get(),
+                                        self.input_clave.get(),
+                                        self.input_correo.get(),
+                                        self.input_celular.get(),
+                                        selec)
                     self.__callback2()
                     self.destroy()
                 else:
@@ -153,8 +178,9 @@ class VentanaRegistro(tk.Toplevel):
         else:
             self.label_aviso['text'] = respuesta[1]
 
-    def cambiar_ciudades(self, event, ciudades):
+    def cambiar_ciudades(self, event=None, ciudades=None):
         s = self.combo_box_prov.current()
+        print(s)
         ciu = []
         self.index_cidades = []
         if s != 0:
@@ -163,8 +189,9 @@ class VentanaRegistro(tk.Toplevel):
                     ciu.append(j[1])
                     self.index_cidades.append(j[0])
 
+            
             self.combo_box_cuidad['values'] = ciu
-            self.combo_box_cuidad.current(0)
+            self.combo_box_cuidad.current(self.info_user[5])
             self.flag_prov = True
         else:
             self.combo_box_cuidad['values'] = ['Seleccione una cuidad']

@@ -21,7 +21,8 @@ class VentanaMovimientos(tk.Toplevel):
         x = (ancho_pantalla // 2) - (1000 // 2)
         y = (altura_pantalla // 2) - (700 // 2)
         self.geometry(f'{1000}x{700}+{x}+{y}')
-        self.title("Retiro")
+        self.title("Movimientos")
+        self.configure(bg=color.BLANCO)
 
         self.font_style = tk_font.Font(
             family="Cascadia Code", size=25, slant="italic", weight="bold")
