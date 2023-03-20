@@ -116,7 +116,7 @@ class VentanaPerfilAdmin(tk.Tk):
         self.__lista_usuarios.destroy()
 
     def mostrar_aviso_confirmacion(self):
-        self.aviso = tk.Label(self, text="Usuario Registrado con exito!", foreground=color.VERDE_00, bg=color.VERDE_4C,
+        self.aviso = tk.Label(self, text="Proceso realizado con exito!", foreground=color.VERDE_00, bg=color.VERDE_4C,
                               font=("Cascadia Code", 12))
         self.aviso.place(x=0, y=0, width=300, height=40)
         btn_cerrar = tk.Label(self.aviso, text="X", foreground=color.VERDE_00, bg=color.VERDE_4C,
@@ -140,6 +140,8 @@ class VentanaPerfilAdmin(tk.Tk):
         db.abrir_conexion()
         self.res = db.actualizar_us('CALL acU(%s,%s,%s,%s,%s,%s,%s)',(nombre,cedula,telefono,correo,clave,ide,ciudad))
         db.cerrar_conexion()
+
+        self.mostrar_aviso_confirmacion()
 
 
     def generar_cuenta(self, cedula, telefono):

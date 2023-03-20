@@ -154,7 +154,7 @@ class VentanaRegistro(tk.Toplevel):
                 selec = self.index_cidades[0]
                 res = Cajero().valida_cuentas( self.input_cedula.get())
                 if not res['estado'] or self.mood.lower() == 'editar':
-                    if self.mood.lower() == 'registro':
+                    if self.mood.lower() == 'registrar':
                         self.__callback(self.input_nombre.get(),
                                         self.input_cedula.get(),
                                         self.input_clave.get(),
